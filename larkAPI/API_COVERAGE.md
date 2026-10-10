@@ -97,11 +97,11 @@ The 49-operation list above is the inventory generated from the official SDK's B
 
 ## Remaining engineering tasks
 
-- Replace the permissive request payload interface with per-operation typed payloads while keeping SDK internal request options private.
-- Add pagination helpers that preserve continuation tokens and stop safely.
-- Build a complete endpoint registry with exact official docs, HTTP method/path, scopes, supported token types, limits, and destructive/idempotency notes. The current table records method/path but does not yet enumerate all permission and rate-limit metadata.
-- Add an integration-test harness that is opt-in and cannot mutate production Base data accidentally.
-- Update each endpoint's status only when its test criteria are met.
+- Finish the public-reference page-by-page comparison and record every confirmed endpoint gap or explicit non-applicability. The SDK inventory and linked API Explorer pages are useful navigation, not proof of exhaustive public coverage.
+- Extend endpoint-specific contract assertions for any path/query/body/response details that differ from the pinned SDK's generated types.
+- Expand the endpoint registry with verified scopes, supported token types, rate limits, pagination, and destructive/idempotency notes.
+- Keep real API integration tests deferred until `larkAPI_N8N/` is complete; then use an explicitly designated test Base and an opt-in harness.
+- Update endpoint statuses only when the documented test criteria are met.
 
 ## Completion rules
 
