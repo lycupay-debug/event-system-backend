@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+import re
 import threading
 from datetime import datetime, timezone
 from pathlib import Path
@@ -24,7 +25,7 @@ def utc_now() -> str:
 def derive_event_id(header: dict[str, Any] | None, event: dict[str, Any]) -> str:
     """Prefer the platform event ID; use a stable digest when it is unavailable."""
     candidate = header.get("event_id") if isinstance(header, dict) else None
-    if isinstance(candidate, str) and candidate and candidate.replace("-", "").replace("_", "").isalnum() and len(candidate) <= 180:
+    if isinstance(candidate, str) and re.fullmatch(r"[A-Za-z0-9_-]{1,180}", candidate):
         return candidate
     canonical = json.dumps({"header": header or {}, "event": event}, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     return "sha256_" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
