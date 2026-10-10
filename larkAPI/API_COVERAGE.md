@@ -4,9 +4,10 @@ This ledger tracks the first-stage `larkAPI` wrapper surface against the officia
 
 ## Status meanings
 
-- `WRAPPED_NOT_TESTED`: named wrapper exists; package compilation passed, but that endpoint has not been live-tested.
-- `IMPLEMENTED`: wrapper and local tests pass.
-- `INTEGRATION_VERIFIED`: successful live request tested against an explicitly permitted test resource.
+- `WRAPPED_NOT_TESTED`: named wrapper exists, but local wrapper tests have not passed.
+- `WRAPPER_TESTED`: offline tests confirm the named wrapper forwards payloads and normalizes errors; this is not a remote endpoint contract test.
+- `CONTRACT_TESTED`: compile-time request path/query/body types and specific contract assertions are checked locally.
+- `INTEGRATION_VERIFIED`: successful live request tested against an explicitly permitted test Base.
 - `GAP`: documented public endpoint is not yet wrapped.
 - `BLOCKED`: cannot be implemented or verified; reason documented.
 
@@ -21,13 +22,13 @@ The pinned SDK generated Bitable client exposes 49 unique operation/version comb
 | 3 | app.table | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/batch_create` | `tables.batchCreate` | WRAPPER_TESTED |
 | 4 | app.table | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables` | `tables.create` | WRAPPER_TESTED |
 | 5 | app.table | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id` | `tables.delete` | WRAPPER_TESTED |
-| 6 | app.table | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables` | `tables.list` | WRAPPER_TESTED |
+| 6 | app.table | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables` | `tables.list` | CONTRACT_TESTED |
 | 7 | app.dashboard | copy | POST | `/open-apis/bitable/v1/apps/:app_token/dashboards/:block_id/copy` | `dashboards.copy` | WRAPPER_TESTED |
 | 8 | app.dashboard | list | GET | `/open-apis/bitable/v1/apps/:app_token/dashboards` | `dashboards.list` | WRAPPER_TESTED |
 | 9 | app | update | PUT | `/open-apis/bitable/v1/apps/:app_token` | `apps.update` | WRAPPER_TESTED |
 | 10 | app | copy | POST | `/open-apis/bitable/v1/apps/:app_token/copy` | `apps.copy` | WRAPPER_TESTED |
 | 11 | app | create | POST | `/open-apis/bitable/v1/apps` | `apps.create` | WRAPPER_TESTED |
-| 12 | app | get | GET | `/open-apis/bitable/v1/apps/:app_token` | `apps.get` | WRAPPER_TESTED |
+| 12 | app | get | GET | `/open-apis/bitable/v1/apps/:app_token` | `apps.get` | CONTRACT_TESTED |
 | 13 | app.table.record | batch_delete | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_delete` | `records.batchDelete` | WRAPPER_TESTED |
 | 14 | app.table.record | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_create` | `records.batchCreate` | WRAPPER_TESTED |
 | 15 | app.table.record | batch_update | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_update` | `records.batchUpdate` | WRAPPER_TESTED |
@@ -37,7 +38,7 @@ The pinned SDK generated Bitable client exposes 49 unique operation/version comb
 | 19 | app.table.record | batch_get | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_get` | `records.batchGet` | WRAPPER_TESTED |
 | 20 | app.table.record | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/:record_id` | `records.delete` | WRAPPER_TESTED |
 | 21 | app.table.record | get | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/:record_id` | `records.get` | WRAPPER_TESTED |
-| 22 | app.table.record | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records` | `records.list` | WRAPPER_TESTED |
+| 22 | app.table.record | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records` | `records.list` | CONTRACT_TESTED |
 | 23 | app.role.member | batch_delete | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members/batch_delete` | `roles.batchDeleteMembers` | WRAPPER_TESTED |
 | 24 | app.role.member | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members/batch_create` | `roles.batchCreateMembers` | WRAPPER_TESTED |
 | 25 | app.role.member | create | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members` | `roles.createMember` | WRAPPER_TESTED |
