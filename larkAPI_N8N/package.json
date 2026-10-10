@@ -11,11 +11,9 @@
     "bitable"
   ],
   "main": "dist/nodes/LarkBitable/LarkBitable.node.js",
-  "types": "dist/nodes/LarkBitable/LarkBitable.node.d.ts",
   "files": [
     "dist",
-    "README.md",
-    "credentials"
+    "README.md"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json && node scripts/copy-assets.cjs && esbuild nodes/LarkBitable/LarkBitable.node.ts --bundle --platform=node --format=cjs --external:n8n-workflow --external:@larksuiteoapi/node-sdk --outfile=dist/nodes/LarkBitable/LarkBitable.node.js",
