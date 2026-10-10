@@ -13,7 +13,7 @@ This ledger tracks the first-stage `larkAPI` wrapper surface against the officia
 
 ## SDK-generated endpoint inventory
 
-The pinned SDK generated Bitable client exposes 49 unique operation/version combinations in its `bitable` client surface, and all 49 are exposed as named methods. Offline tests verify payload forwarding for all 49 and SDK error normalization. Compile-time contracts cover representative Base, table, record-list, record-create, query, and attachment-upload payloads. Six supporting Drive media methods are separately exposed for Bitable attachment upload/download; they are not counted as Bitable endpoints. All validation runs against a disposable clone. No live API calls are made in this phase.
+The pinned SDK generated Bitable client exposes 49 unique operation/version combinations in its `bitable` client surface, and all 49 are exposed as named methods. Offline tests verify payload forwarding for all 49 and SDK error normalization. Compile-time assertions compare each of the 49 wrapper payload types directly with its corresponding official SDK method type; six attachment-supporting Drive methods receive the same type-equivalence checks. Additional positive/negative examples cover path, query, body, and attachment-upload values. Six supporting Drive media methods are separately exposed for Bitable attachment upload/download; they are not counted as Bitable endpoints. All validation runs against a disposable clone. No live API calls are made in this phase.
 
 | # | API resource | Operation | HTTP | Path | Official API Explorer | Wrapper | Status |
 |---:|---|---|---|---|---|---|
