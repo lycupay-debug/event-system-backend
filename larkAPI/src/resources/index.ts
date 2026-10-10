@@ -1,13 +1,20 @@
 import type * as lark from "@larksuiteoapi/node-sdk";
 import { normalizeLarkApiError } from "../errors";
 
-type AsyncMethod = (...args: any[]) => Promise<any>;
-type PublicApiMethod = (payload?: any) => Promise<any>;
+type SdkMethod = (...args: any[]) => Promise<unknown>;
+type PayloadOf<T extends SdkMethod> = NonNullable<Parameters<T>[0]>;
 
-function safe(operation: string, method: AsyncMethod): PublicApiMethod {
-  return async (payload?: any) => {
+/**
+ * Preserve the official SDK request and response types while keeping its
+ * internal request-options type out of this library's public method signatures.
+ */
+function safe<T extends SdkMethod>(
+  operation: string,
+  method: T,
+): (payload: PayloadOf<T>) => Promise<Awaited<ReturnType<T>>> {
+  return async (payload) => {
     try {
-      return await method(payload);
+      return (await method(payload)) as Awaited<ReturnType<T>>;
     } catch (error) {
       throw normalizeLarkApiError(error, operation);
     }
@@ -15,18 +22,11 @@ function safe(operation: string, method: AsyncMethod): PublicApiMethod {
 }
 
 /**
- * Named, grouped Bitable API methods exposed by the official SDK's generated
- * Bitable client. API_COVERAGE.md tracks the endpoint inventory and verification.
- *
- * Request payloads currently use a permissive shape while the endpoint inventory
- * is reconciled. Per-endpoint payload interfaces are part of the next type-safety
- * pass; callers should follow the official API request schemas.
+ * Named, grouped Bitable API methods exposed by the official SDK generated
+ * client. Request and response types are inferred from the pinned SDK declarations.
+ * API_COVERAGE.md tracks endpoint inventory and verification state.
  */
-export interface BitableMethods {
-  [resource: string]: Record<string, PublicApiMethod>;
-}
-
-export function createBitableMethods(client: lark.Client): BitableMethods {
+export function createBitableMethods(client: lark.Client) {
   const b = client.bitable;
 
   return {
