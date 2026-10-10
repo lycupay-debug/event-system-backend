@@ -8,6 +8,7 @@ Initial custom n8n community-node package for Feishu/Lark Bitable. The node call
 - One resource-style node with the Bitable resources currently exposed by `larkAPI/`: Base, Table, Record, Field, View, Form, Field Group, Dashboard, Custom Role, Workflow, and Block Workflow.
 - Operation selectors for the 49 Bitable SDK wrapper operations.
 - A JSON Payload field passed to the selected typed wrapper without reshaping it.
+- Attachment operations backed by the six Drive media helper methods, including binary upload, multipart upload parts, and binary download output.
 - Normal output handling, item pairing, and n8n's Continue On Fail behavior.
 - No live API calls during unit tests.
 
@@ -30,6 +31,14 @@ Example for listing records (verify any optional fields against the selected API
 ```
 
 In n8n, the Payload field can use an expression to build the object from upstream data. Do not place App Secret or tenant access tokens in this payload; credentials are managed by n8n.
+
+## Attachment binary data
+
+- **Upload / Upload Part:** connect an upstream node that has binary data, set **Binary Property** to its binary property name (commonly `data`), and include the other required upload metadata under `data` in Payload. The node injects the actual binary Buffer as `data.file`; do not put file bytes in JSON.
+- **Prepare Upload / Finish Upload:** pass the SDK-required JSON `data` and `path` values through Payload.
+- **Download:** pass the required attachment identifiers in Payload, then set **Output Binary Property** (default `data`). The downloaded file is emitted as n8n binary data; **File Name** can override the output filename.
+
+The SDK may return different download response forms by endpoint/runtime. The node accepts a Buffer, byte array, string, or async-readable stream; unexpected response forms fail explicitly rather than emitting an empty file.
 
 ## Development
 
