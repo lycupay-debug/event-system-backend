@@ -31,26 +31,52 @@ def configure_logging() -> None:
 logger = logging.getLogger("feishu_bridge.events")
 
 
+def _to_jsonable(value: Any) -> Any:
+    """Convert SDK models and nested values to JSON-compatible data."""
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, dict):
+        return {str(key): _to_jsonable(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple, set)):
+        return [_to_jsonable(item) for item in value]
+
+    to_dict = getattr(value, "to_dict", None)
+    if callable(to_dict):
+        try:
+            return _to_jsonable(to_dict())
+        except Exception:  # Fall back to public instance attributes below.
+            pass
+
+    attributes = getattr(value, "__dict__", None)
+    if isinstance(attributes, dict):
+        public_attributes = {
+            key: item
+            for key, item in attributes.items()
+            if not key.startswith("_")
+        }
+        return _to_jsonable(public_attributes)
+
+    return str(value)
+
+
 def on_bitable_record_changed(
     data: P2DriveFileBitableRecordChangedV1,
 ) -> None:
-    """Log a compact event summary; never dump the complete event payload."""
+    """Log the full event body, including the action list and changed field IDs."""
     event = getattr(data, "event", None)
     if event is None:
         logger.warning("Received %s without an event body", EVENT_TYPE)
         return
 
-    action_list = getattr(event, "action_list", None) or []
-    summary: dict[str, Any] = {
+    event_payload = _to_jsonable(event)
+    payload = {
         "event_type": EVENT_TYPE,
-        "file_type": getattr(event, "file_type", None),
-        "file_token": getattr(event, "file_token", None),
-        "table_id": getattr(event, "table_id", None),
-        "revision": getattr(event, "revision", None),
-        "action_count": len(action_list),
-        "update_time": getattr(event, "update_time", None),
+        "event": event_payload,
     }
-    logger.info("bitable_record_changed %s", json.dumps(summary, ensure_ascii=False))
+    logger.info(
+        "bitable_record_changed %s",
+        json.dumps(payload, ensure_ascii=False, separators=(",", ":")),
+    )
 
 
 def build_event_handler() -> lark.EventDispatcherHandler:
