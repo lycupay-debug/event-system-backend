@@ -12,59 +12,77 @@ This ledger tracks the first-stage `larkAPI` wrapper surface against the officia
 
 ## SDK-generated endpoint inventory
 
-The pinned SDK generated Bitable client exposes 49 unique operation/version combinations in its `bitable` client surface. The wrapper exposes all 49 as named methods. Offline tests now verify the wrapper count, payload forwarding for every exposed method, normalized SDK failure context, pagination safeguards, and error normalization. Type-check, declaration build, and unit tests are run against a disposable clone. These tests do not prove every endpoint's remote contract or live availability. Endpoint-by-endpoint documentation reconciliation and live API tests remain outstanding.
+The pinned SDK generated Bitable client exposes 49 unique operation/version combinations in its `bitable` client surface, and all 49 are exposed as named methods. Offline tests verify payload forwarding for all 49 and SDK error normalization. Compile-time contracts cover representative Base, table, record-list, record-create, query, and attachment-upload payloads. Six supporting Drive media methods are separately exposed for Bitable attachment upload/download; they are not counted as Bitable endpoints. All validation runs against a disposable clone. No live API calls are made in this phase.
 
 | # | API resource | Operation | HTTP | Path | Wrapper | Status |
 |---:|---|---|---|---|---|---|
-| 1 | app.table | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id` | `tables.update` | WRAPPED_NOT_TESTED |
-| 2 | app.table | batch_delete | POST | `/open-apis/bitable/v1/apps/:app_token/tables/batch_delete` | `tables.batchDelete` | WRAPPED_NOT_TESTED |
-| 3 | app.table | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/batch_create` | `tables.batchCreate` | WRAPPED_NOT_TESTED |
-| 4 | app.table | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables` | `tables.create` | WRAPPED_NOT_TESTED |
-| 5 | app.table | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id` | `tables.delete` | WRAPPED_NOT_TESTED |
-| 6 | app.table | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables` | `tables.list` | WRAPPED_NOT_TESTED |
-| 7 | app.dashboard | copy | POST | `/open-apis/bitable/v1/apps/:app_token/dashboards/:block_id/copy` | `dashboards.copy` | WRAPPED_NOT_TESTED |
-| 8 | app.dashboard | list | GET | `/open-apis/bitable/v1/apps/:app_token/dashboards` | `dashboards.list` | WRAPPED_NOT_TESTED |
-| 9 | app | update | PUT | `/open-apis/bitable/v1/apps/:app_token` | `apps.update` | WRAPPED_NOT_TESTED |
-| 10 | app | copy | POST | `/open-apis/bitable/v1/apps/:app_token/copy` | `apps.copy` | WRAPPED_NOT_TESTED |
-| 11 | app | create | POST | `/open-apis/bitable/v1/apps` | `apps.create` | WRAPPED_NOT_TESTED |
-| 12 | app | get | GET | `/open-apis/bitable/v1/apps/:app_token` | `apps.get` | WRAPPED_NOT_TESTED |
-| 13 | app.table.record | batch_delete | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_delete` | `records.batchDelete` | WRAPPED_NOT_TESTED |
-| 14 | app.table.record | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_create` | `records.batchCreate` | WRAPPED_NOT_TESTED |
-| 15 | app.table.record | batch_update | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_update` | `records.batchUpdate` | WRAPPED_NOT_TESTED |
-| 16 | app.table.record | update | PUT | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/:record_id` | `records.update` | WRAPPED_NOT_TESTED |
-| 17 | app.table.record | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records` | `records.create` | WRAPPED_NOT_TESTED |
-| 18 | app.table.record | search | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/search` | `records.search` | WRAPPED_NOT_TESTED |
-| 19 | app.table.record | batch_get | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_get` | `records.batchGet` | WRAPPED_NOT_TESTED |
-| 20 | app.table.record | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/:record_id` | `records.delete` | WRAPPED_NOT_TESTED |
-| 21 | app.table.record | get | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/:record_id` | `records.get` | WRAPPED_NOT_TESTED |
-| 22 | app.table.record | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records` | `records.list` | WRAPPED_NOT_TESTED |
-| 23 | app.role.member | batch_delete | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members/batch_delete` | `roles.batchDeleteMembers` | WRAPPED_NOT_TESTED |
-| 24 | app.role.member | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members/batch_create` | `roles.batchCreateMembers` | WRAPPED_NOT_TESTED |
-| 25 | app.role.member | create | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members` | `roles.createMember` | WRAPPED_NOT_TESTED |
-| 26 | app.role.member | list | GET | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members` | `roles.listMembers` | WRAPPED_NOT_TESTED |
-| 27 | app.role.member | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members/:member_id` | `roles.deleteMember` | WRAPPED_NOT_TESTED |
-| 28 | app.role | create | POST | `/open-apis/bitable/v1/apps/:app_token/roles` | `roles.create` | WRAPPED_NOT_TESTED |
-| 29 | app.role | update | PUT | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id` | `roles.update` | WRAPPED_NOT_TESTED |
-| 30 | app.role | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id` | `roles.delete` | WRAPPED_NOT_TESTED |
-| 31 | app.role | list | GET | `/open-apis/bitable/v1/apps/:app_token/roles` | `roles.list` | WRAPPED_NOT_TESTED |
-| 32 | app.table.view | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views` | `views.create` | WRAPPED_NOT_TESTED |
-| 33 | app.table.view | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views/:view_id` | `views.update` | WRAPPED_NOT_TESTED |
-| 34 | app.table.view | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views/:view_id` | `views.delete` | WRAPPED_NOT_TESTED |
-| 35 | app.table.view | get | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views/:view_id` | `views.get` | WRAPPED_NOT_TESTED |
-| 36 | app.table.view | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views` | `views.list` | WRAPPED_NOT_TESTED |
-| 37 | app.table.form | upgrade | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id/upgrade` | `forms.upgrade` | WRAPPED_NOT_TESTED |
-| 38 | app.table.form | get | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id` | `forms.get` | WRAPPED_NOT_TESTED |
-| 39 | app.table.form | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id` | `forms.update` | WRAPPED_NOT_TESTED |
-| 40 | app.table.field_group | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/field_groups` | `fieldGroups.create` | WRAPPED_NOT_TESTED |
-| 41 | app.table.form.field | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id/fields/:field_id` | `forms.updateField` | WRAPPED_NOT_TESTED |
-| 42 | app.table.form.field | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id/fields` | `forms.listFields` | WRAPPED_NOT_TESTED |
-| 43 | app.workflow | update | PUT | `/open-apis/bitable/v1/apps/:app_token/workflows/:workflow_id` | `workflows.update` | WRAPPED_NOT_TESTED |
-| 44 | app.workflow | list | GET | `/open-apis/bitable/v1/apps/:app_token/workflows` | `workflows.list` | WRAPPED_NOT_TESTED |
-| 45 | app.table.field | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields/:field_id` | `fields.delete` | WRAPPED_NOT_TESTED |
-| 46 | app.table.field | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields` | `fields.list` | WRAPPED_NOT_TESTED |
-| 47 | app.table.field | update | PUT | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields/:field_id` | `fields.update` | WRAPPED_NOT_TESTED |
-| 48 | app.table.field | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields` | `fields.create` | WRAPPED_NOT_TESTED |
-| 49 | app.block_workflow | list | GET | `/open-apis/bitable/v1/apps/:app_token/block_workflows` | `blockWorkflows.list` | WRAPPED_NOT_TESTED |
+| 1 | app.table | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id` | `tables.update` | WRAPPER_TESTED |
+| 2 | app.table | batch_delete | POST | `/open-apis/bitable/v1/apps/:app_token/tables/batch_delete` | `tables.batchDelete` | WRAPPER_TESTED |
+| 3 | app.table | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/batch_create` | `tables.batchCreate` | WRAPPER_TESTED |
+| 4 | app.table | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables` | `tables.create` | WRAPPER_TESTED |
+| 5 | app.table | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id` | `tables.delete` | WRAPPER_TESTED |
+| 6 | app.table | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables` | `tables.list` | WRAPPER_TESTED |
+| 7 | app.dashboard | copy | POST | `/open-apis/bitable/v1/apps/:app_token/dashboards/:block_id/copy` | `dashboards.copy` | WRAPPER_TESTED |
+| 8 | app.dashboard | list | GET | `/open-apis/bitable/v1/apps/:app_token/dashboards` | `dashboards.list` | WRAPPER_TESTED |
+| 9 | app | update | PUT | `/open-apis/bitable/v1/apps/:app_token` | `apps.update` | WRAPPER_TESTED |
+| 10 | app | copy | POST | `/open-apis/bitable/v1/apps/:app_token/copy` | `apps.copy` | WRAPPER_TESTED |
+| 11 | app | create | POST | `/open-apis/bitable/v1/apps` | `apps.create` | WRAPPER_TESTED |
+| 12 | app | get | GET | `/open-apis/bitable/v1/apps/:app_token` | `apps.get` | WRAPPER_TESTED |
+| 13 | app.table.record | batch_delete | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_delete` | `records.batchDelete` | WRAPPER_TESTED |
+| 14 | app.table.record | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_create` | `records.batchCreate` | WRAPPER_TESTED |
+| 15 | app.table.record | batch_update | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_update` | `records.batchUpdate` | WRAPPER_TESTED |
+| 16 | app.table.record | update | PUT | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/:record_id` | `records.update` | WRAPPER_TESTED |
+| 17 | app.table.record | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records` | `records.create` | WRAPPER_TESTED |
+| 18 | app.table.record | search | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/search` | `records.search` | WRAPPER_TESTED |
+| 19 | app.table.record | batch_get | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_get` | `records.batchGet` | WRAPPER_TESTED |
+| 20 | app.table.record | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/:record_id` | `records.delete` | WRAPPER_TESTED |
+| 21 | app.table.record | get | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/:record_id` | `records.get` | WRAPPER_TESTED |
+| 22 | app.table.record | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records` | `records.list` | WRAPPER_TESTED |
+| 23 | app.role.member | batch_delete | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members/batch_delete` | `roles.batchDeleteMembers` | WRAPPER_TESTED |
+| 24 | app.role.member | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members/batch_create` | `roles.batchCreateMembers` | WRAPPER_TESTED |
+| 25 | app.role.member | create | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members` | `roles.createMember` | WRAPPER_TESTED |
+| 26 | app.role.member | list | GET | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members` | `roles.listMembers` | WRAPPER_TESTED |
+| 27 | app.role.member | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members/:member_id` | `roles.deleteMember` | WRAPPER_TESTED |
+| 28 | app.role | create | POST | `/open-apis/bitable/v1/apps/:app_token/roles` | `roles.create` | WRAPPER_TESTED |
+| 29 | app.role | update | PUT | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id` | `roles.update` | WRAPPER_TESTED |
+| 30 | app.role | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id` | `roles.delete` | WRAPPER_TESTED |
+| 31 | app.role | list | GET | `/open-apis/bitable/v1/apps/:app_token/roles` | `roles.list` | WRAPPER_TESTED |
+| 32 | app.table.view | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views` | `views.create` | WRAPPER_TESTED |
+| 33 | app.table.view | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views/:view_id` | `views.update` | WRAPPER_TESTED |
+| 34 | app.table.view | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views/:view_id` | `views.delete` | WRAPPER_TESTED |
+| 35 | app.table.view | get | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views/:view_id` | `views.get` | WRAPPER_TESTED |
+| 36 | app.table.view | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views` | `views.list` | WRAPPER_TESTED |
+| 37 | app.table.form | upgrade | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id/upgrade` | `forms.upgrade` | WRAPPER_TESTED |
+| 38 | app.table.form | get | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id` | `forms.get` | WRAPPER_TESTED |
+| 39 | app.table.form | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id` | `forms.update` | WRAPPER_TESTED |
+| 40 | app.table.field_group | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/field_groups` | `fieldGroups.create` | WRAPPER_TESTED |
+| 41 | app.table.form.field | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id/fields/:field_id` | `forms.updateField` | WRAPPER_TESTED |
+| 42 | app.table.form.field | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id/fields` | `forms.listFields` | WRAPPER_TESTED |
+| 43 | app.workflow | update | PUT | `/open-apis/bitable/v1/apps/:app_token/workflows/:workflow_id` | `workflows.update` | WRAPPER_TESTED |
+| 44 | app.workflow | list | GET | `/open-apis/bitable/v1/apps/:app_token/workflows` | `workflows.list` | WRAPPER_TESTED |
+| 45 | app.table.field | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields/:field_id` | `fields.delete` | WRAPPER_TESTED |
+| 46 | app.table.field | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields` | `fields.list` | WRAPPER_TESTED |
+| 47 | app.table.field | update | PUT | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields/:field_id` | `fields.update` | WRAPPER_TESTED |
+| 48 | app.table.field | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields` | `fields.create` | WRAPPER_TESTED |
+| 49 | app.block_workflow | list | GET | `/open-apis/bitable/v1/apps/:app_token/block_workflows` | `blockWorkflows.list` | WRAPPER_TESTED |
+
+## Public API reference reconciliation
+
+This is a tracked reconciliation, not a claim that every currently published Bitable endpoint has already been exhaustively checked.
+
+### Official public reference spot-checks
+
+- [Create a record](https://open.feishu.cn/document/server-docs/docs/bitable-v1/app-table-record/create): current public reference confirms `POST /open-apis/bitable/v1/apps/:app_token/tables/:table_id/records`, the record-create scope, query parameters such as `user_id_type` and `client_token`, and that attachment fields require a file token from the upload-material or multipart-upload APIs.
+- [Delete a field](https://open.feishu.cn/document/uAjLw4CM/ukTMukTMukTM/reference/bitable-v1/app-table-field/delete): confirms the public field-delete route and the Base read/write/manage scope.
+- [Batch create role members](https://open.feishu.cn/document/uAjLw4CM/ukTMukTMukTM/reference/bitable-v1/app-role-member/batch_create): confirms the custom-role member endpoint and advanced-permission prerequisites.
+- [Bitable overview](https://open.larksuite.com/document/server-docs/docs/bitable-v1/bitable-overview) and the official platform's [Bitable capability summary](https://open.larksuite.com/document/mcp_open_tools/feishu-cli-let-ai-actually-do-your-work-in-feishu) identify tables, fields, records, views, forms, dashboards, automations, and permission roles as core capability areas.
+
+### Scope decision
+
+- The core Bitable inventory is the 49 SDK-generated methods in the table below.
+- The official record API explicitly requires a separate Drive media upload flow for attachment fields. Therefore `createBitableAttachmentMethods()` additionally exposes `upload`, `prepareUpload`, `uploadPart`, `finishUpload`, `download`, and `batchGetTmpDownloadUrl`. These use the SDK's typed Drive media methods and are tracked separately from the Bitable count.
+- The remaining reconciliation task is to walk the current official reference page-by-page and record any public endpoint not present in the pinned SDK. A search result or a 49-method SDK inventory alone is not enough to declare zero gaps.
+- Real API integration testing is intentionally deferred until `larkAPI_N8N/` is complete, as requested.
 
 ## Full-coverage boundary
 
