@@ -51,10 +51,22 @@ The CLI may require its own configuration before authenticated commands can run.
 
 ## Test
 
-The test directory contains local unit tests. Tests do not connect to Feishu:
+Run local unit tests. These tests do not connect to Feishu:
 
 ```bash
-sudo docker compose run --rm --entrypoint python feishu-bridge -m unittest discover -s test -v
+sudo docker compose run --rm --build --entrypoint python feishu-bridge -m unittest discover -s test -v
+```
+
+Run the one-shot file-level Bitable subscription test. This makes a real API request using the credentials in `.env`; it does not change the listener's runtime code:
+
+```bash
+sudo docker compose run --rm --build --entrypoint python feishu-bridge test/test_bitable_subscription.py
+```
+
+The test targets the Bitable whose file token is configured in `test/test_bitable_subscription.py`. A successful API response confirms the subscription request was accepted; then edit a non-formula field in that Bitable and inspect the listener logs:
+
+```bash
+sudo docker compose logs --since=5m feishu-bridge
 ```
 
 ## Event payload
