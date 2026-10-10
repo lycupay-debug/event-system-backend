@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { createBitableMethods } = require("../dist/resources");
+const { createBitableMethods, createBitableAttachmentMethods } = require("../dist/resources");
 const { LarkApiError } = require("../dist/errors");
 
 const sdkResources = {
@@ -88,6 +88,61 @@ test("normalizes an SDK failure with the correct wrapper operation", async () =>
       assert.equal(error.code, 1254003);
       assert.equal(error.message, "mock failure");
       assert.equal(error.requestId, "req-test-1");
+      return true;
+    },
+  );
+});
+
+test("exposes supporting Drive media methods for Bitable attachments", async () => {
+  const calls = [];
+  const names = [
+    "uploadAll",
+    "uploadPrepare",
+    "uploadPart",
+    "uploadFinish",
+    "download",
+    "batchGetTmpDownloadUrl",
+  ];
+  const media = Object.fromEntries(names.map((name) => [
+    name,
+    async (payload) => {
+      calls.push({ name, payload });
+      return { name, payload };
+    },
+  ]));
+  const methods = createBitableAttachmentMethods({ drive: { media } });
+  const payload = {
+    data: {
+      file_name: "attachment.txt",
+      parent_type: "bitable_file",
+      parent_node: "test_app_token",
+      size: 1,
+      file: Buffer.from("x"),
+    },
+  };
+  const result = await methods.upload(payload);
+
+  assert.equal(result.name, "uploadAll");
+  assert.equal(result.payload, payload);
+  assert.equal(calls[0].payload, payload);
+  assert.equal(Object.keys(methods).length, 6);
+});
+
+test("normalizes attachment upload failures with Drive operation context", async () => {
+  const media = {
+    uploadAll: async () => {
+      throw { response: { data: { code: 1254001, msg: "bad attachment", request_id: "req-file-1" } } };
+    },
+  };
+  const methods = createBitableAttachmentMethods({ drive: { media } });
+
+  await assert.rejects(
+    methods.upload({ data: {} }),
+    (error) => {
+      assert.ok(error instanceof LarkApiError);
+      assert.equal(error.operation, "drive.media.uploadAll");
+      assert.equal(error.code, 1254001);
+      assert.equal(error.requestId, "req-file-1");
       return true;
     },
   );
