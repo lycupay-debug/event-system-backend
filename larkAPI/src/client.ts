@@ -5,8 +5,6 @@ export interface LarkClientConfig {
   appSecret: string;
   /** "feishu" for Feishu CN; "lark" for Lark global. */
   platform?: "feishu" | "lark";
-  /** Optional request timeout in milliseconds. */
-  timeout?: number;
 }
 
 /**
@@ -26,6 +24,5 @@ export function createLarkClient(config: LarkClientConfig): lark.Client {
     appId: config.appId,
     appSecret: config.appSecret,
     domain: config.platform === "lark" ? lark.Domain.Lark : lark.Domain.Feishu,
-    ...(config.timeout ? { loggerLevel: lark.LoggerLevel.error } : {}),
   });
 }
