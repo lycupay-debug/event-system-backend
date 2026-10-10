@@ -124,6 +124,7 @@ export function createBitableAttachmentMethods(client: lark.Client) {
     download: safe("drive.media.download", media, media.download),
     batchGetTmpDownloadUrl: safe(
       "drive.media.batchGetTmpDownloadUrl",
+      media,
       media.batchGetTmpDownloadUrl,
     ),
   };
