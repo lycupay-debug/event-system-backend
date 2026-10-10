@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from app.main import build_structured_event
+from app.bitable_parser import build_structured_event
 from core.json_store import JSONStore
 from methods.get_parse_history_path import get_parse_history_path
 from methods.get_pending_event_path import get_pending_event_path
