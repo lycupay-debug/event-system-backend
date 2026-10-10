@@ -1,0 +1,42 @@
+{
+  "name": "n8n-nodes-lark-bitable",
+  "version": "0.1.0",
+  "description": "n8n community node for Feishu/Lark Bitable APIs",
+  "license": "UNLICENSED",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "feishu",
+    "lark",
+    "bitable"
+  ],
+  "main": "dist/nodes/LarkBitable/LarkBitable.node.js",
+  "types": "dist/nodes/LarkBitable/LarkBitable.node.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "credentials"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "npm run typecheck && node --test test/*.test.cjs"
+  },
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/LarkBitableApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/LarkBitable/LarkBitable.node.js"
+    ]
+  },
+  "dependencies": {
+    "@lycupay-debug/lark-api": "file:../larkAPI"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.30",
+    "n8n-workflow": "^1.82.0",
+    "typescript": "5.8.3"
+  }
+}
