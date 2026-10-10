@@ -1,0 +1,1 @@
+"""Feishu bridge application package."""
