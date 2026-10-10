@@ -5,7 +5,7 @@ Python service for receiving Feishu/Lark events over the official SDK WebSocket 
 ## Current scope
 
 - Register `p2.drive.file.bitable_record_changed_v1` with the official `lark-oapi` Python SDK.
-- Log a minimal event summary without dumping the full payload.
+- Log the complete event body, including the action list, record IDs, action types, and changed field IDs when supplied by Feishu.
 - Run as an isolated Docker Compose service; it does not modify the existing n8n container.
 - Keep credentials in an untracked `.env` file.
 
@@ -71,7 +71,7 @@ sudo docker compose logs --since=5m feishu-bridge
 
 ## Event payload
 
-The handler logs the event name, file token, table ID, revision, action count and update time. It deliberately does not print the full event payload. The event is not yet forwarded to n8n or a business-processing queue.
+The handler logs the complete event body received from Feishu, including `action_list` details such as action type, record ID, and changed field IDs when those fields are present in the event. Feishu's event itself may not contain the before/after cell values; retrieving those values requires a separate Bitable Records API request. The event is not yet forwarded to n8n or a business-processing queue.
 
 ## Repository policy
 
