@@ -12,6 +12,8 @@ services:
     restart: unless-stopped
     init: true
     stop_grace_period: 20s
+    volumes:
+      - feishu_bridge_data:/app/data
     read_only: true
     tmpfs:
       - /tmp:size=16m,mode=1777
@@ -24,3 +26,6 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+volumes:
+  feishu_bridge_data:
