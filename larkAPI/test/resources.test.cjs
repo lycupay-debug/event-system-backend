@@ -22,12 +22,12 @@ const sdkResources = {
 function makeMethods(resource, names, calls, failingMethod) {
   return Object.fromEntries(names.map((name) => [
     name,
-    async (payload) => {
-      calls.push({ resource, name, payload });
+    async function (payload) {
+      calls.push({ resource, name, payload, ownerMarker: this.marker });
       if (failingMethod === `${resource}.${name}`) {
         throw { response: { data: { code: 1254003, msg: "mock failure", request_id: "req-test-1" } } };
       }
-      return { resource, name, payload };
+      return { resource, name, payload, ownerMarker: this.marker };
     },
   ]));
 }
@@ -37,7 +37,10 @@ function makeClient(failingMethod) {
   const bitable = Object.fromEntries(
     Object.entries(sdkResources).map(([resource, names]) => [
       resource,
-      makeMethods(resource, names, calls, failingMethod),
+      Object.assign(
+        makeMethods(resource, names, calls, failingMethod),
+        { marker: resource },
+      ),
     ]),
   );
   return { client: { bitable }, calls };
@@ -67,6 +70,8 @@ test("every named wrapper forwards its payload to an SDK method", async () => {
       const payload = { marker: `${resourceName}.${methodName}`, path: { app_token: "test_app" } };
       const result = await method(payload);
       assert.equal(result.payload, payload);
+      assert.equal(result.ownerMarker, calls[count].resource);
+      assert.equal(calls[count].ownerMarker, calls[count].resource);
       assert.equal(calls[count].payload, payload);
       count += 1;
     }
