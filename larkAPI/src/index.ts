@@ -6,3 +6,9 @@
 export { createLarkClient, type LarkClientConfig } from "./client";
 export { LarkApiError, normalizeLarkApiError } from "./errors";
 export { createBitableMethods, type BitableMethods } from "./resources";
+export {
+  collectCursorPages,
+  type CollectPagesOptions,
+  type CollectedPages,
+  type CursorPage,
+} from "./pagination";
