@@ -29,7 +29,11 @@ test("node exposes all current Bitable resources and 49 operations", () => {
     "upload", "prepareUpload", "uploadPart", "finishUpload", "download", "batchGetTmpDownloadUrl",
   ];
   const operationsBlock = source.split("const RESOURCE_OPERATIONS")[1].split("const RESOURCE_NAMES")[0];
-  assert.equal([...operationsBlock.matchAll(/value: "[A-Za-z]+"/g)].length, 49);
+  const allOperationValues = [...operationsBlock.matchAll(/value: "[A-Za-z]+"/g)];
+  assert.equal(allOperationValues.length, 55);
+  const attachmentBlock = operationsBlock.split("attachments: [")[1];
+  assert.equal([...attachmentBlock.matchAll(/value: "[A-Za-z]+"/g)].length, 6);
+  assert.equal(allOperationValues.length - 6, 49);
   for (const operation of expectedOperations) {
     assert.ok(source.includes(`value: "${operation}"`), `missing operation ${operation}`);
   }
