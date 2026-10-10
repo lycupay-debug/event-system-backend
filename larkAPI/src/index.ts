@@ -5,7 +5,12 @@
  */
 export { createLarkClient, type LarkClientConfig } from "./client";
 export { LarkApiError, normalizeLarkApiError } from "./errors";
-export { createBitableMethods, type BitableMethods } from "./resources";
+export {
+  createBitableMethods,
+  createBitableAttachmentMethods,
+  type BitableMethods,
+  type BitableAttachmentMethods,
+} from "./resources";
 export {
   collectCursorPages,
   type CollectPagesOptions,
