@@ -27,6 +27,7 @@ COPY app/ /app/app/
 COPY test/ /app/test/
 
 RUN useradd --create-home --uid 10001 appuser \
+    && mkdir -p /app/data \
     && chown -R appuser:appuser /app
 
 USER 10001:10001
