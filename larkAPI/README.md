@@ -67,4 +67,4 @@ Expected quality gates:
 
 ## Current status
 
-Initial SDK-backed named wrappers and the shared client/error layer are in place. Type-check and declaration build have passed in a disposable Node container. Unit-test coverage and the endpoint-by-endpoint comparison against the full current official API reference remain in progress. See [API_COVERAGE.md](./API_COVERAGE.md).
+Initial SDK-backed named wrappers and the shared client/error layer are in place. Offline tests now check all 49 wrapper methods for payload forwarding, as well as pagination and error normalization. Type-check, declaration build, and unit tests are run in a disposable Node container. This is not yet proof of complete public-API coverage: endpoint-by-endpoint reconciliation against the current official reference, endpoint contract tests, stronger request types, and opt-in live integration tests remain in progress. See [API_COVERAGE.md](./API_COVERAGE.md).
