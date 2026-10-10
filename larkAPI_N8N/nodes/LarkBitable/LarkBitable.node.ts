@@ -1,6 +1,8 @@
 import {
+  createBitableAttachmentMethods,
   createBitableMethods,
   createLarkClient,
+  type BitableAttachmentMethods,
   type BitableMethods,
 } from "@lycupay-debug/lark-api";
 import {
@@ -22,7 +24,8 @@ type ResourceName =
   | "dashboards"
   | "roles"
   | "workflows"
-  | "blockWorkflows";
+  | "blockWorkflows"
+  | "attachments";
 
 const RESOURCE_OPERATIONS: Record<ResourceName, Array<{ name: string; value: string; description: string }>> = {
   apps: [
@@ -96,6 +99,14 @@ const RESOURCE_OPERATIONS: Record<ResourceName, Array<{ name: string; value: str
   blockWorkflows: [
     { name: "List", value: "list", description: "List block workflows" },
   ],
+  attachments: [
+    { name: "Upload", value: "upload", description: "Upload a Bitable attachment from n8n binary data" },
+    { name: "Prepare Upload", value: "prepareUpload", description: "Prepare a multipart attachment upload" },
+    { name: "Upload Part", value: "uploadPart", description: "Upload one multipart attachment part from n8n binary data" },
+    { name: "Finish Upload", value: "finishUpload", description: "Finish a multipart attachment upload" },
+    { name: "Download", value: "download", description: "Download an attachment into n8n binary data" },
+    { name: "Get Temporary Download URL", value: "batchGetTmpDownloadUrl", description: "Get temporary download URLs" },
+  ],
 };
 
 const RESOURCE_NAMES: Array<{ name: string; value: ResourceName }> = [
@@ -110,6 +121,7 @@ const RESOURCE_NAMES: Array<{ name: string; value: ResourceName }> = [
   { name: "Custom Role", value: "roles" },
   { name: "Workflow", value: "workflows" },
   { name: "Block Workflow", value: "blockWorkflows" },
+  { name: "Attachment", value: "attachments" },
 ];
 
 function parsePayload(value: unknown): Record<string, unknown> {
@@ -140,6 +152,22 @@ function toOutputJson(value: unknown): INodeExecutionData["json"] {
     return value as INodeExecutionData["json"];
   }
   return { result: value as string | number | boolean | object };
+}
+
+async function responseToBuffer(value: unknown): Promise<Buffer> {
+  if (Buffer.isBuffer(value)) return value;
+  if (value instanceof Uint8Array) return Buffer.from(value);
+  if (typeof value === "string") return Buffer.from(value);
+  if (typeof value === "object" && value !== null && Symbol.asyncIterator in value) {
+    const chunks: Buffer[] = [];
+    for await (const chunk of value as AsyncIterable<unknown>) {
+      if (Buffer.isBuffer(chunk)) chunks.push(chunk);
+      else if (chunk instanceof Uint8Array) chunks.push(Buffer.from(chunk));
+      else chunks.push(Buffer.from(String(chunk)));
+    }
+    return Buffer.concat(chunks);
+  }
+  throw new Error("The attachment download response did not contain a Buffer or readable stream.");
 }
 
 export class LarkBitable implements INodeType {
@@ -187,6 +215,32 @@ export class LarkBitable implements INodeType {
         description: "Complete request object expected by the official SDK method. Include path, query, and data keys as required by that endpoint.",
       },
       {
+        displayName: "Binary Property",
+        name: "binaryPropertyName",
+        type: "string",
+        default: "data",
+        required: true,
+        displayOptions: { show: { resource: ["attachments"], operation: ["upload", "uploadPart"] } },
+        description: "Name of the incoming n8n binary property containing the file or upload part.",
+      },
+      {
+        displayName: "Output Binary Property",
+        name: "outputBinaryPropertyName",
+        type: "string",
+        default: "data",
+        required: true,
+        displayOptions: { show: { resource: ["attachments"], operation: ["download"] } },
+        description: "Name of the binary property that will contain the downloaded attachment.",
+      },
+      {
+        displayName: "File Name",
+        name: "outputFileName",
+        type: "string",
+        default: "",
+        displayOptions: { show: { resource: ["attachments"], operation: ["download"] } },
+        description: "Optional output filename. If empty, the node uses the API response metadata or attachment.bin.",
+      },
+      {
         displayName: "Note",
         name: "usageNote",
         type: "notice",
@@ -205,6 +259,7 @@ export class LarkBitable implements INodeType {
       platform: credentials.platform === "lark" ? "lark" : "feishu",
     });
     const bitable: BitableMethods = createBitableMethods(client);
+    const attachments: BitableAttachmentMethods = createBitableAttachmentMethods(client);
     const inputItems = this.getInputData();
     const output: INodeExecutionData[] = [];
 
@@ -213,6 +268,59 @@ export class LarkBitable implements INodeType {
         const resource = this.getNodeParameter("resource", i) as ResourceName;
         const operation = this.getNodeParameter("operation", i) as string;
         const payload = parsePayload(this.getNodeParameter("payload", i));
+        if (resource === "attachments") {
+          const attachmentMethod = attachments[operation as keyof BitableAttachmentMethods] as
+            | ((arg: Record<string, unknown>) => Promise<unknown>)
+            | undefined;
+          if (typeof attachmentMethod !== "function") {
+            throw new Error(`Unsupported attachment operation: ${operation}`);
+          }
+
+          if (operation === "upload" || operation === "uploadPart") {
+            const binaryPropertyName = this.getNodeParameter("binaryPropertyName", i) as string;
+            const fileBuffer = await this.helpers.getBinaryDataBuffer(i, binaryPropertyName);
+            const data = payload.data;
+            if (typeof data !== "object" || data === null || Array.isArray(data)) {
+              throw new Error("Attachment upload Payload must contain a data object.");
+            }
+            payload.data = { ...(data as Record<string, unknown>), file: fileBuffer };
+          }
+
+          const result = await attachmentMethod(payload);
+          if (operation === "download") {
+            const outputBinaryPropertyName = this.getNodeParameter("outputBinaryPropertyName", i) as string;
+            const outputFileName = String(this.getNodeParameter("outputFileName", i) ?? "").trim();
+            const download = result as unknown;
+            const response = typeof download === "object" && download !== null && "data" in download
+              ? (download as { data: unknown }).data
+              : download;
+            const metadata = typeof download === "object" && download !== null
+              ? download as Record<string, unknown>
+              : {};
+            const buffer = await responseToBuffer(response);
+            const responseHeaders = metadata.headers && typeof metadata.headers === "object"
+              ? metadata.headers as Record<string, unknown>
+              : {};
+            const contentType = String(responseHeaders["content-type"] ?? "application/octet-stream");
+            const responseName = String(responseHeaders["content-disposition"] ?? "")
+              .match(/filename\*?=(?:UTF-8''|["']?)([^;"']+)/i)?.[1]
+              ?.replace(/^["']|["']$/g, "");
+            const binary = await this.helpers.prepareBinaryData(
+              buffer,
+              outputFileName || responseName || "attachment.bin",
+              contentType,
+            );
+            output.push({
+              json: { downloaded: true, fileName: outputFileName || responseName || "attachment.bin", mimeType: contentType },
+              binary: { [outputBinaryPropertyName]: binary },
+              pairedItem: { item: i },
+            });
+          } else {
+            output.push({ json: toOutputJson(result), pairedItem: { item: i } });
+          }
+          continue;
+        }
+
         const resourceMethods = bitable[resource] as unknown as Record<string, (arg: Record<string, unknown>) => Promise<unknown>>;
         const method = resourceMethods?.[operation];
         if (typeof method !== "function") {
