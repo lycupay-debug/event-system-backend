@@ -2,39 +2,47 @@
 
 This ledger tracks endpoint coverage for the first-stage `larkAPI` method library.
 
-**Status meanings**
+## Status meanings
+
 - `NOT_STARTED`: not yet inventoried or implemented.
-- `INVENTORIED`: official endpoint has been identified; method not yet implemented.
-- `IMPLEMENTED`: wrapper exists and has a local test.
-- `INTEGRATION_VERIFIED`: successful live request was tested against a permitted test resource.
-- `BLOCKED`: cannot be implemented or verified yet; reason must be documented.
+- `INVENTORIED`: identified in the official API reference or SDK generated definitions.
+- `WRAPPED_NOT_TESTED`: a named wrapper exists, but local type-check/tests have not yet passed.
+- `IMPLEMENTED`: wrapper and local tests pass.
+- `INTEGRATION_VERIFIED`: successful live request tested against an explicitly permitted test resource.
+- `BLOCKED`: cannot be implemented or verified; reason documented.
 
-Do not mark a resource family complete until its official endpoint list has been compared with the current official API reference and SDK generated definitions.
+## Current SDK-backed wrapper inventory
 
-## Scope
+The first wrapper pass follows the official `@larksuiteoapi/node-sdk` generated Bitable client. Each entry below is a named method exported through `createBitableMethods(client)`. The wrappers preserve SDK arguments/results and normalize thrown errors. The package has **not yet been type-checked or integration-tested**.
 
-Include the Bitable Open API resource families, including (but not limited to):
-
-| Resource family | Expected coverage | Status |
+| Resource | Wrapper methods | Status |
 |---|---|---|
-| App/Base metadata and management | Create, retrieve, update, copy, list/search where supported, delete where supported | NOT_STARTED |
-| Tables | Create, list, retrieve, update, delete | NOT_STARTED |
-| Fields | Create, list, retrieve, update, delete | NOT_STARTED |
-| Records | Create, retrieve, list, update, delete, batch operations, search/filter, field-value operations where supported | NOT_STARTED |
-| Views | Create, list, retrieve, update, delete, query view records where supported | NOT_STARTED |
-| Forms | Form metadata, configuration, response/record operations where supported by public API | NOT_STARTED |
-| Dashboards | Dashboard metadata and management where exposed by the public API | NOT_STARTED |
-| Automation/workflows | Automation metadata and operations where exposed by the public API | NOT_STARTED |
-| Roles and permissions | Role definitions, member assignment, resource permission operations where exposed by the public API | NOT_STARTED |
-| Advanced data operations | Batch operations, field formatting, lookup/link/association support, attachment handling, formulas and field-type payloads | NOT_STARTED |
-| Subscriptions/events | Bitable/Drive subscription endpoints relevant to Base changes where exposed by the public API | NOT_STARTED |
-| Import/export and other Bitable-adjacent endpoints | Include only if documented as Bitable APIs; record API family and permissions | NOT_STARTED |
+| App/Base | `apps.create`, `apps.get`, `apps.update`, `apps.copy` | WRAPPED_NOT_TESTED |
+| Tables | `tables.create`, `tables.list`, `tables.update`, `tables.delete`, `tables.batchCreate`, `tables.batchDelete` | WRAPPED_NOT_TESTED |
+| Records | `records.create`, `records.get`, `records.list`, `records.search`, `records.update`, `records.delete`, `records.batchCreate`, `records.batchGet`, `records.batchUpdate`, `records.batchDelete` | WRAPPED_NOT_TESTED |
+| Fields | `fields.create`, `fields.list`, `fields.update`, `fields.delete` | WRAPPED_NOT_TESTED |
+| Views | `views.create`, `views.get`, `views.list`, `views.update`, `views.delete` | WRAPPED_NOT_TESTED |
+| Forms | `forms.get`, `forms.update`, `forms.upgrade`, `forms.listFields`, `forms.updateField` | WRAPPED_NOT_TESTED |
+| Field groups | `fieldGroups.create` | WRAPPED_NOT_TESTED |
+| Dashboards | `dashboards.list`, `dashboards.copy` | WRAPPED_NOT_TESTED |
+| Roles and members | `roles.create`, `roles.list`, `roles.update`, `roles.delete`, `roles.listMembers`, `roles.createMember`, `roles.batchCreateMembers`, `roles.deleteMember`, `roles.batchDeleteMembers` | WRAPPED_NOT_TESTED |
+| Workflows | `workflows.list`, `workflows.update`, `blockWorkflows.list` | WRAPPED_NOT_TESTED |
 
-The table above is a planning taxonomy, not a final endpoint count. Some capabilities may belong to a different API product or may not be available as a public server API. Verify each entry before implementation.
+## Remaining full-coverage work
+
+This initial wrapper list is **not yet proof of full Bitable API coverage**. Complete these tasks before declaring phase one complete:
+
+1. Compare the SDK's generated Bitable API definitions with the current official Bitable server API reference, endpoint by endpoint.
+2. Identify public endpoints missing from the pinned SDK version. Add a typed raw-request fallback only when the official API documents the endpoint.
+3. Include all supported methods for resource families such as records, fields, views, forms, dashboards, automations/workflows, roles/permissions, advanced field types, and any additional Bitable APIs actually documented by the platform.
+4. Record exact HTTP method, path, SDK semantic method, scopes, supported token types, pagination behavior, limits, and destructive/idempotency characteristics for each endpoint.
+5. Type-check the package and add offline unit tests for wrapper routing, error normalization, and pagination.
+6. Run live integration tests only against a designated test Base, after credentials and permissions are explicitly configured.
+7. Update this ledger with tested status and a generated endpoint count. Do not claim completeness until all documented endpoints are accounted for.
 
 ## Endpoint inventory format
 
-For every endpoint, record:
+For every official endpoint, record:
 
 - Official endpoint name and documentation URL
 - HTTP method and path
@@ -52,8 +60,15 @@ For every endpoint, record:
 
 - A resource-level generic pass-through is not a substitute for named methods.
 - Do not silently drop unknown request or response fields.
-- Do not auto-retry non-idempotent writes unless the retry behavior is explicitly safe.
+- Do not auto-retry non-idempotent writes unless retry behavior is explicitly safe.
 - Pagination helpers must stop safely and preserve platform continuation tokens.
-- Errors must preserve the platform code/message and the operation context without logging secrets.
+- Errors must preserve the platform code/message and operation context without logging secrets.
 - Live integration tests must use an explicitly designated test Base. Do not mutate a production Base to test write operations.
 - Mark endpoints unavailable in the SDK separately from endpoints unavailable in the public API. Use a typed raw-request fallback only when official documentation supports the endpoint.
+
+## Official references
+
+- [Lark Open Platform](https://open.larksuite.com/)
+- [Official Lark Node.js SDK](https://github.com/larksuite/node-sdk)
+- [Official SDK package](https://www.npmjs.com/package/@larksuiteoapi/node-sdk)
+- [Bitable API reference](https://open.larksuite.com/document/server-docs/docs/bitable-v1/bitable-overview)
