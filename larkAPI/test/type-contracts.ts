@@ -20,10 +20,12 @@ methods.records.create({
   data: { fields: { Title: "example" } },
 });
 
-// @ts-expect-error page_size must be numeric.
 methods.records.list({
   path: { app_token: "app_token", table_id: "table_id" },
-  params: { page_size: "many" },
+  params: {
+    // @ts-expect-error page_size must be numeric.
+    page_size: "many",
+  },
 });
 
 // @ts-expect-error app_token must be a string.
