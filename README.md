@@ -5,11 +5,14 @@ Python service for receiving Feishu/Lark events over the official SDK WebSocket 
 ## Current scope
 
 - Register `p2.drive.file.bitable_record_changed_v1` with the official `lark-oapi` Python SDK.
-- Log the complete event body, including the action list, record IDs, action types, and changed field IDs when supplied by Feishu.
+- Log the original event body and a structured summary of changed fields.
+- Decode JSON-encoded `field_value` strings in `before_value` and `after_value`.
+- Match before/after entries by `field_id` instead of relying on list order, and omit fields whose decoded values are unchanged.
+- Preserve unknown or malformed field values as strings rather than dropping them.
 - Run as an isolated Docker Compose service; it does not modify the existing n8n container.
 - Keep credentials in an untracked `.env` file.
 
-This is a starter implementation. A successful connection and real record-change delivery must be verified against the configured Feishu app before treating the integration as operational.
+The event's `field_id` values are not human-readable field names. Mapping them to names requires table-field metadata; this listener does not make an extra API call for every event. The event is not yet forwarded to n8n or a business-processing queue.
 
 ## Prerequisites
 
@@ -69,9 +72,15 @@ The test targets the Bitable whose file token is configured in `test/test_bitabl
 sudo docker compose logs --since=5m feishu-bridge
 ```
 
-## Event payload
+## Event log structure
 
-The handler logs the complete event body received from Feishu, including `action_list` details such as action type, record ID, and changed field IDs when those fields are present in the event. Feishu's event itself may not contain the before/after cell values; retrieving those values requires a separate Bitable Records API request. The event is not yet forwarded to n8n or a business-processing queue.
+Each `bitable_record_changed` log JSON contains:
+
+- `event`: the original event payload, preserved for troubleshooting.
+- `structured`: event metadata and `actions`; each action contains `record_id`, action type, and `changes`.
+- Each change contains `field_id`, decoded `before`, and decoded `after`. Empty `field_value` strings are represented as JSON `null`; unchanged decoded values are omitted from `changes`.
+
+For example, a text field changing from empty to a text value appears in `structured.actions[].changes[]`, while fields whose before/after values are identical are not included.
 
 ## Repository policy
 
