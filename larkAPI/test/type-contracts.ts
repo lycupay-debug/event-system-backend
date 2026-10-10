@@ -10,6 +10,21 @@ methods.records.list({
   path: { app_token: "app_token", table_id: "table_id" },
   params: { page_size: 100 },
 });
+methods.records.create({
+  path: { app_token: "app_token", table_id: "table_id" },
+  params: {
+    user_id_type: "open_id",
+    client_token: "00000000-0000-4000-8000-000000000000",
+    ignore_consistency_check: false,
+  },
+  data: { fields: { Title: "example" } },
+});
+
+// @ts-expect-error page_size must be numeric.
+methods.records.list({
+  path: { app_token: "app_token", table_id: "table_id" },
+  params: { page_size: "many" },
+});
 
 // @ts-expect-error app_token must be a string.
 methods.apps.get({ path: { app_token: 123 } });
