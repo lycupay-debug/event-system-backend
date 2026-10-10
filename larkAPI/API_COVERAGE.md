@@ -1,70 +1,97 @@
 # Bitable API Coverage Ledger
 
-This ledger tracks endpoint coverage for the first-stage `larkAPI` method library.
+This ledger tracks the first-stage `larkAPI` wrapper surface against the official Lark Node.js SDK generated Bitable API definitions.
 
 ## Status meanings
 
-- `NOT_STARTED`: not yet inventoried or implemented.
-- `INVENTORIED`: identified in the official API reference or SDK generated definitions.
-- `WRAPPED_NOT_TESTED`: a named wrapper exists, but local type-check/tests have not yet passed.
+- `WRAPPED_NOT_TESTED`: named wrapper exists; package compilation passed, but that endpoint has not been live-tested.
 - `IMPLEMENTED`: wrapper and local tests pass.
 - `INTEGRATION_VERIFIED`: successful live request tested against an explicitly permitted test resource.
+- `GAP`: documented public endpoint is not yet wrapped.
 - `BLOCKED`: cannot be implemented or verified; reason documented.
 
-## Current SDK-backed wrapper inventory
+## SDK-generated endpoint inventory
 
-The first wrapper pass follows the official `@larksuiteoapi/node-sdk` generated Bitable client. Each entry below is a named method exported through `createBitableMethods(client)`. The wrappers preserve SDK arguments/results and normalize thrown errors. The package has **not yet been type-checked or integration-tested**.
+The current SDK generated Bitable client exposes 49 unique operation/version combinations in the `bitable` project source. The current wrapper file covers these 49 operations by named methods. The package has passed TypeScript type-check, declaration build, and three offline error-normalization tests. Endpoint-specific tests and live API tests have not yet been run.
 
-| Resource | Wrapper methods | Status |
-|---|---|---|
-| App/Base | `apps.create`, `apps.get`, `apps.update`, `apps.copy` | WRAPPED_NOT_TESTED |
-| Tables | `tables.create`, `tables.list`, `tables.update`, `tables.delete`, `tables.batchCreate`, `tables.batchDelete` | WRAPPED_NOT_TESTED |
-| Records | `records.create`, `records.get`, `records.list`, `records.search`, `records.update`, `records.delete`, `records.batchCreate`, `records.batchGet`, `records.batchUpdate`, `records.batchDelete` | WRAPPED_NOT_TESTED |
-| Fields | `fields.create`, `fields.list`, `fields.update`, `fields.delete` | WRAPPED_NOT_TESTED |
-| Views | `views.create`, `views.get`, `views.list`, `views.update`, `views.delete` | WRAPPED_NOT_TESTED |
-| Forms | `forms.get`, `forms.update`, `forms.upgrade`, `forms.listFields`, `forms.updateField` | WRAPPED_NOT_TESTED |
-| Field groups | `fieldGroups.create` | WRAPPED_NOT_TESTED |
-| Dashboards | `dashboards.list`, `dashboards.copy` | WRAPPED_NOT_TESTED |
-| Roles and members | `roles.create`, `roles.list`, `roles.update`, `roles.delete`, `roles.listMembers`, `roles.createMember`, `roles.batchCreateMembers`, `roles.deleteMember`, `roles.batchDeleteMembers` | WRAPPED_NOT_TESTED |
-| Workflows | `workflows.list`, `workflows.update`, `blockWorkflows.list` | WRAPPED_NOT_TESTED |
+| # | API resource | Operation | HTTP | Path | Wrapper | Status |
+|---:|---|---|---|---|---|---|
+| 1 | app.table | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id` | `tables.update` | WRAPPED_NOT_TESTED |
+| 2 | app.table | batch_delete | POST | `/open-apis/bitable/v1/apps/:app_token/tables/batch_delete` | `tables.batchDelete` | WRAPPED_NOT_TESTED |
+| 3 | app.table | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/batch_create` | `tables.batchCreate` | WRAPPED_NOT_TESTED |
+| 4 | app.table | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables` | `tables.create` | WRAPPED_NOT_TESTED |
+| 5 | app.table | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id` | `tables.delete` | WRAPPED_NOT_TESTED |
+| 6 | app.table | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables` | `tables.list` | WRAPPED_NOT_TESTED |
+| 7 | app.dashboard | copy | POST | `/open-apis/bitable/v1/apps/:app_token/dashboards/:block_id/copy` | `dashboards.copy` | WRAPPED_NOT_TESTED |
+| 8 | app.dashboard | list | GET | `/open-apis/bitable/v1/apps/:app_token/dashboards` | `dashboards.list` | WRAPPED_NOT_TESTED |
+| 9 | app | update | PUT | `/open-apis/bitable/v1/apps/:app_token` | `apps.update` | WRAPPED_NOT_TESTED |
+| 10 | app | copy | POST | `/open-apis/bitable/v1/apps/:app_token/copy` | `apps.copy` | WRAPPED_NOT_TESTED |
+| 11 | app | create | POST | `/open-apis/bitable/v1/apps` | `apps.create` | WRAPPED_NOT_TESTED |
+| 12 | app | get | GET | `/open-apis/bitable/v1/apps/:app_token` | `apps.get` | WRAPPED_NOT_TESTED |
+| 13 | app.table.record | batch_delete | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_delete` | `records.batchDelete` | WRAPPED_NOT_TESTED |
+| 14 | app.table.record | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_create` | `records.batchCreate` | WRAPPED_NOT_TESTED |
+| 15 | app.table.record | batch_update | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_update` | `records.batchUpdate` | WRAPPED_NOT_TESTED |
+| 16 | app.table.record | update | PUT | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/:record_id` | `records.update` | WRAPPED_NOT_TESTED |
+| 17 | app.table.record | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records` | `records.create` | WRAPPED_NOT_TESTED |
+| 18 | app.table.record | search | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/search` | `records.search` | WRAPPED_NOT_TESTED |
+| 19 | app.table.record | batch_get | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_get` | `records.batchGet` | WRAPPED_NOT_TESTED |
+| 20 | app.table.record | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/:record_id` | `records.delete` | WRAPPED_NOT_TESTED |
+| 21 | app.table.record | get | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/:record_id` | `records.get` | WRAPPED_NOT_TESTED |
+| 22 | app.table.record | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records` | `records.list` | WRAPPED_NOT_TESTED |
+| 23 | app.role.member | batch_delete | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members/batch_delete` | `roles.batchDeleteMembers` | WRAPPED_NOT_TESTED |
+| 24 | app.role.member | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members/batch_create` | `roles.batchCreateMembers` | WRAPPED_NOT_TESTED |
+| 25 | app.role.member | create | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members` | `roles.createMember` | WRAPPED_NOT_TESTED |
+| 26 | app.role.member | list | GET | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members` | `roles.listMembers` | WRAPPED_NOT_TESTED |
+| 27 | app.role.member | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members/:member_id` | `roles.deleteMember` | WRAPPED_NOT_TESTED |
+| 28 | app.role | create | POST | `/open-apis/bitable/v1/apps/:app_token/roles` | `roles.create` | WRAPPED_NOT_TESTED |
+| 29 | app.role | update | PUT | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id` | `roles.update` | WRAPPED_NOT_TESTED |
+| 30 | app.role | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id` | `roles.delete` | WRAPPED_NOT_TESTED |
+| 31 | app.role | list | GET | `/open-apis/bitable/v1/apps/:app_token/roles` | `roles.list` | WRAPPED_NOT_TESTED |
+| 32 | app.table.view | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views` | `views.create` | WRAPPED_NOT_TESTED |
+| 33 | app.table.view | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views/:view_id` | `views.update` | WRAPPED_NOT_TESTED |
+| 34 | app.table.view | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views/:view_id` | `views.delete` | WRAPPED_NOT_TESTED |
+| 35 | app.table.view | get | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views/:view_id` | `views.get` | WRAPPED_NOT_TESTED |
+| 36 | app.table.view | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views` | `views.list` | WRAPPED_NOT_TESTED |
+| 37 | app.table.form | upgrade | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id/upgrade` | `forms.upgrade` | WRAPPED_NOT_TESTED |
+| 38 | app.table.form | get | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id` | `forms.get` | WRAPPED_NOT_TESTED |
+| 39 | app.table.form | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id` | `forms.update` | WRAPPED_NOT_TESTED |
+| 40 | app.table.field_group | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/field_groups` | `fieldGroups.create` | WRAPPED_NOT_TESTED |
+| 41 | app.table.form.field | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id/fields/:field_id` | `forms.updateField` | WRAPPED_NOT_TESTED |
+| 42 | app.table.form.field | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id/fields` | `forms.listFields` | WRAPPED_NOT_TESTED |
+| 43 | app.workflow | update | PUT | `/open-apis/bitable/v1/apps/:app_token/workflows/:workflow_id` | `workflows.update` | WRAPPED_NOT_TESTED |
+| 44 | app.workflow | list | GET | `/open-apis/bitable/v1/apps/:app_token/workflows` | `workflows.list` | WRAPPED_NOT_TESTED |
+| 45 | app.table.field | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields/:field_id` | `fields.delete` | WRAPPED_NOT_TESTED |
+| 46 | app.table.field | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields` | `fields.list` | WRAPPED_NOT_TESTED |
+| 47 | app.table.field | update | PUT | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields/:field_id` | `fields.update` | WRAPPED_NOT_TESTED |
+| 48 | app.table.field | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields` | `fields.create` | WRAPPED_NOT_TESTED |
+| 49 | app.block_workflow | list | GET | `/open-apis/bitable/v1/apps/:app_token/block_workflows` | `blockWorkflows.list` | WRAPPED_NOT_TESTED |
 
-## Remaining full-coverage work
+## Full-coverage boundary
 
-This initial wrapper list is **not yet proof of full Bitable API coverage**. Complete these tasks before declaring phase one complete:
+The 49-operation list above is the inventory generated from the official SDK's Bitable project source, not yet an independent proof that every currently documented public endpoint is represented. Before phase one is declared complete:
 
-1. Compare the SDK's generated Bitable API definitions with the current official Bitable server API reference, endpoint by endpoint.
-2. Identify public endpoints missing from the pinned SDK version. Add a typed raw-request fallback only when the official API documents the endpoint.
-3. Include all supported methods for resource families such as records, fields, views, forms, dashboards, automations/workflows, roles/permissions, advanced field types, and any additional Bitable APIs actually documented by the platform.
-4. Record exact HTTP method, path, SDK semantic method, scopes, supported token types, pagination behavior, limits, and destructive/idempotency characteristics for each endpoint.
-5. Type-check the package and add offline unit tests for wrapper routing, error normalization, and pagination.
-6. Run live integration tests only against a designated test Base, after credentials and permissions are explicitly configured.
-7. Update this ledger with tested status and a generated endpoint count. Do not claim completeness until all documented endpoints are accounted for.
+1. Compare this list with the current official Bitable API reference and record any documented endpoint absent from the SDK-generated definitions.
+2. Add a typed raw-request wrapper only for documented public endpoints missing from the SDK.
+3. Review related Drive APIs separately when they are required for Bitable file subscription, attachment, import/export, or other Base-adjacent capabilities; do not silently mislabel a Drive API as a Bitable endpoint.
+4. Add per-endpoint tests for payload mapping, pagination and error handling.
+5. Verify live calls only against an explicitly designated test Base and only with the necessary scopes.
 
-## Endpoint inventory format
+## Remaining engineering tasks
 
-For every official endpoint, record:
-
-- Official endpoint name and documentation URL
-- HTTP method and path
-- SDK semantic method (or documented raw-request fallback)
-- Required identifiers and parameters
-- Required scopes and supported token types
-- Pagination behavior and limits
-- Request/response types
-- Wrapper method name
-- Unit-test status
-- Live integration-test status
-- Notes on destructive effects or idempotency
+- Replace the permissive request payload interface with per-operation typed payloads while keeping SDK internal request options private.
+- Add pagination helpers that preserve continuation tokens and stop safely.
+- Add an endpoint registry containing exact official docs, HTTP method/path, scopes, supported token types, limits, and destructive/idempotency notes.
+- Add an integration-test harness that is opt-in and cannot mutate production Base data accidentally.
+- Update each endpoint's status only when its test criteria are met.
 
 ## Completion rules
 
 - A resource-level generic pass-through is not a substitute for named methods.
 - Do not silently drop unknown request or response fields.
 - Do not auto-retry non-idempotent writes unless retry behavior is explicitly safe.
-- Pagination helpers must stop safely and preserve platform continuation tokens.
 - Errors must preserve the platform code/message and operation context without logging secrets.
 - Live integration tests must use an explicitly designated test Base. Do not mutate a production Base to test write operations.
-- Mark endpoints unavailable in the SDK separately from endpoints unavailable in the public API. Use a typed raw-request fallback only when official documentation supports the endpoint.
+- Mark endpoints unavailable in the SDK separately from endpoints unavailable in the public API.
 
 ## Official references
 
