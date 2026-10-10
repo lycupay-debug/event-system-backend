@@ -24,6 +24,8 @@ RUN python -m pip install --upgrade pip \
     && python -m pip install -r /app/requirements.txt
 
 COPY app/ /app/app/
+COPY core/ /app/core/
+COPY methods/ /app/methods/
 COPY test/ /app/test/
 
 RUN useradd --create-home --uid 10001 appuser \
