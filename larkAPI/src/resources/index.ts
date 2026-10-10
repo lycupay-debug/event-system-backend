@@ -14,9 +14,8 @@ function safe<T extends AsyncMethod>(operation: string, method: T): T {
 }
 
 /**
- * Named, grouped Bitable API methods exposed by the official Node SDK's
- * generated Bitable client. This is the SDK-backed method surface currently
- * inventoried for this package; API_COVERAGE.md tracks gaps and verification.
+ * Named, grouped Bitable API methods exposed by the official SDK's generated
+ * Bitable client. API_COVERAGE.md tracks the endpoint inventory and verification.
  */
 export function createBitableMethods(client: lark.Client) {
   const b = client.bitable;
@@ -37,61 +36,61 @@ export function createBitableMethods(client: lark.Client) {
       batchDelete: safe("bitable.appTable.batchDelete", b.appTable.batchDelete),
     },
     records: {
-      create: safe("bitable.appTable.record.create", b.appTable.record.create),
-      get: safe("bitable.appTable.record.get", b.appTable.record.get),
-      list: safe("bitable.appTable.record.list", b.appTable.record.list),
-      search: safe("bitable.appTable.record.search", b.appTable.record.search),
-      update: safe("bitable.appTable.record.update", b.appTable.record.update),
-      delete: safe("bitable.appTable.record.delete", b.appTable.record.delete),
-      batchCreate: safe("bitable.appTable.record.batchCreate", b.appTable.record.batchCreate),
-      batchGet: safe("bitable.appTable.record.batchGet", b.appTable.record.batchGet),
-      batchUpdate: safe("bitable.appTable.record.batchUpdate", b.appTable.record.batchUpdate),
-      batchDelete: safe("bitable.appTable.record.batchDelete", b.appTable.record.batchDelete),
+      create: safe("bitable.appTableRecord.create", b.appTableRecord.create),
+      get: safe("bitable.appTableRecord.get", b.appTableRecord.get),
+      list: safe("bitable.appTableRecord.list", b.appTableRecord.list),
+      search: safe("bitable.appTableRecord.search", b.appTableRecord.search),
+      update: safe("bitable.appTableRecord.update", b.appTableRecord.update),
+      delete: safe("bitable.appTableRecord.delete", b.appTableRecord.delete),
+      batchCreate: safe("bitable.appTableRecord.batchCreate", b.appTableRecord.batchCreate),
+      batchGet: safe("bitable.appTableRecord.batchGet", b.appTableRecord.batchGet),
+      batchUpdate: safe("bitable.appTableRecord.batchUpdate", b.appTableRecord.batchUpdate),
+      batchDelete: safe("bitable.appTableRecord.batchDelete", b.appTableRecord.batchDelete),
     },
     fields: {
-      create: safe("bitable.appTable.field.create", b.appTable.field.create),
-      list: safe("bitable.appTable.field.list", b.appTable.field.list),
-      update: safe("bitable.appTable.field.update", b.appTable.field.update),
-      delete: safe("bitable.appTable.field.delete", b.appTable.field.delete),
+      create: safe("bitable.appTableField.create", b.appTableField.create),
+      list: safe("bitable.appTableField.list", b.appTableField.list),
+      update: safe("bitable.appTableField.update", b.appTableField.update),
+      delete: safe("bitable.appTableField.delete", b.appTableField.delete),
     },
     views: {
-      create: safe("bitable.appTable.view.create", b.appTable.view.create),
-      get: safe("bitable.appTable.view.get", b.appTable.view.get),
-      list: safe("bitable.appTable.view.list", b.appTable.view.list),
-      update: safe("bitable.appTable.view.patch", b.appTable.view.patch),
-      delete: safe("bitable.appTable.view.delete", b.appTable.view.delete),
+      create: safe("bitable.appTableView.create", b.appTableView.create),
+      get: safe("bitable.appTableView.get", b.appTableView.get),
+      list: safe("bitable.appTableView.list", b.appTableView.list),
+      update: safe("bitable.appTableView.patch", b.appTableView.patch),
+      delete: safe("bitable.appTableView.delete", b.appTableView.delete),
     },
     forms: {
-      get: safe("bitable.appTable.form.get", b.appTable.form.get),
-      update: safe("bitable.appTable.form.patch", b.appTable.form.patch),
-      upgrade: safe("bitable.appTable.form.upgrade", b.appTable.form.upgrade),
-      listFields: safe("bitable.appTable.form.field.list", b.appTable.form.field.list),
-      updateField: safe("bitable.appTable.form.field.patch", b.appTable.form.field.patch),
+      get: safe("bitable.appTableForm.get", b.appTableForm.get),
+      update: safe("bitable.appTableForm.patch", b.appTableForm.patch),
+      upgrade: safe("bitable.appTableForm.upgrade", b.appTableForm.upgrade),
+      listFields: safe("bitable.appTableFormField.list", b.appTableFormField.list),
+      updateField: safe("bitable.appTableFormField.patch", b.appTableFormField.patch),
     },
     fieldGroups: {
-      create: safe("bitable.appTable.fieldGroup.create", b.appTable.fieldGroup.create),
+      create: safe("bitable.appTableFieldGroup.create", b.appTableFieldGroup.create),
     },
     dashboards: {
       list: safe("bitable.appDashboard.list", b.appDashboard.list),
       copy: safe("bitable.appDashboard.copy", b.appDashboard.copy),
     },
     roles: {
-      create: safe("bitable.app.role.create", b.app.role.create),
-      list: safe("bitable.app.role.list", b.app.role.list),
-      update: safe("bitable.app.role.update", b.app.role.update),
-      delete: safe("bitable.app.role.delete", b.app.role.delete),
-      listMembers: safe("bitable.app.role.member.list", b.app.role.member.list),
-      createMember: safe("bitable.app.role.member.create", b.app.role.member.create),
-      batchCreateMembers: safe("bitable.app.role.member.batchCreate", b.app.role.member.batchCreate),
-      deleteMember: safe("bitable.app.role.member.delete", b.app.role.member.delete),
-      batchDeleteMembers: safe("bitable.app.role.member.batchDelete", b.app.role.member.batchDelete),
+      create: safe("bitable.appRole.create", b.appRole.create),
+      list: safe("bitable.appRole.list", b.appRole.list),
+      update: safe("bitable.appRole.update", b.appRole.update),
+      delete: safe("bitable.appRole.delete", b.appRole.delete),
+      listMembers: safe("bitable.appRoleMember.list", b.appRoleMember.list),
+      createMember: safe("bitable.appRoleMember.create", b.appRoleMember.create),
+      batchCreateMembers: safe("bitable.appRoleMember.batchCreate", b.appRoleMember.batchCreate),
+      deleteMember: safe("bitable.appRoleMember.delete", b.appRoleMember.delete),
+      batchDeleteMembers: safe("bitable.appRoleMember.batchDelete", b.appRoleMember.batchDelete),
     },
     workflows: {
-      list: safe("bitable.app.workflow.list", b.app.workflow.list),
-      update: safe("bitable.app.workflow.update", b.app.workflow.update),
+      list: safe("bitable.appWorkflow.list", b.appWorkflow.list),
+      update: safe("bitable.appWorkflow.update", b.appWorkflow.update),
     },
     blockWorkflows: {
-      list: safe("bitable.app.blockWorkflow.list", b.app.blockWorkflow.list),
+      list: safe("bitable.appBlockWorkflow.list", b.appBlockWorkflow.list),
     },
   };
 }
