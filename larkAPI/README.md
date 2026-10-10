@@ -67,4 +67,4 @@ Expected quality gates:
 
 ## Current status
 
-Scaffold and scope definition only. Endpoint-by-endpoint implementation and verification remain in progress. See [API_COVERAGE.md](./API_COVERAGE.md).
+Initial SDK-backed named wrappers and the shared client/error layer are in place. Type-check and declaration build have passed in a disposable Node container. Unit-test coverage and the endpoint-by-endpoint comparison against the full current official API reference remain in progress. See [API_COVERAGE.md](./API_COVERAGE.md).
