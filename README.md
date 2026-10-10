@@ -88,3 +88,31 @@ For example, a text field changing from empty to a text value appears in `struct
 - Test code: `test/`
 - No credentials or runtime data in Git.
 - Do not modify the existing n8n container as part of this project.
+
+## Durable event files
+
+Each received event is written to a pending JSON file before it is processed. A single background worker processes pending files one at a time.
+
+- Pending input: `data/pending_events/<event_id>.json`
+- Parsed task: `data/task_list/<event_id>.json`
+- Parse history: `data/parse_history/<event_id>.json`
+
+The event ID comes from the platform event header when available. If the header does not provide a usable ID, a stable SHA-256 digest of the event document is used. Path methods validate event IDs before constructing file paths.
+
+The pending file is removed only after both the task file and parse-history file have been written. If processing fails, the pending file remains and the worker retries it on a later scan. On restart, pending files are discovered from disk and processed again. If a history file already exists, a duplicate pending event is discarded without rewriting the history.
+
+All JSON files are written through `core/json_store.py`: a unique temporary file is created in the target directory, serialized and flushed, synced, then replaced with `os.replace()`. On POSIX, the parent directory is synced after replacement. The data directory is mounted to a named Docker volume so files survive container recreation.
+
+The task list stores one independent JSON file per event. This is file-based task storage, not a shared JSON array; different events do not require concurrent writes to a common task-list file.
+
+## Runtime data
+
+The runtime data lives in the Docker named volume `feishu_bridge_data`, mounted at `/app/data`. It is not committed to Git. Do not remove the volume when rebuilding or recreating the container.
+
+## Tests
+
+The test suite includes path validation, atomic JSON replacement, event persistence, sequential processing, duplicate handling, and recovery of pending files:
+
+```bash
+sudo docker compose run --rm --build --entrypoint python feishu-bridge -m unittest discover -s test -v
+```
