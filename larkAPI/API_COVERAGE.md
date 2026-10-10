@@ -12,7 +12,7 @@ This ledger tracks the first-stage `larkAPI` wrapper surface against the officia
 
 ## SDK-generated endpoint inventory
 
-The current SDK generated Bitable client exposes 49 unique operation/version combinations in the `bitable` project source. The current wrapper file covers these 49 operations by named methods. The package has passed TypeScript type-check, declaration build, and three offline error-normalization tests. Endpoint-specific tests and live API tests have not yet been run.
+The pinned SDK generated Bitable client exposes 49 unique operation/version combinations in its `bitable` client surface. The wrapper exposes all 49 as named methods. Offline tests now verify the wrapper count, payload forwarding for every exposed method, normalized SDK failure context, pagination safeguards, and error normalization. Type-check, declaration build, and unit tests are run against a disposable clone. These tests do not prove every endpoint's remote contract or live availability. Endpoint-by-endpoint documentation reconciliation and live API tests remain outstanding.
 
 | # | API resource | Operation | HTTP | Path | Wrapper | Status |
 |---:|---|---|---|---|---|---|
@@ -80,7 +80,7 @@ The 49-operation list above is the inventory generated from the official SDK's B
 
 - Replace the permissive request payload interface with per-operation typed payloads while keeping SDK internal request options private.
 - Add pagination helpers that preserve continuation tokens and stop safely.
-- Add an endpoint registry containing exact official docs, HTTP method/path, scopes, supported token types, limits, and destructive/idempotency notes.
+- Build a complete endpoint registry with exact official docs, HTTP method/path, scopes, supported token types, limits, and destructive/idempotency notes. The current table records method/path but does not yet enumerate all permission and rate-limit metadata.
 - Add an integration-test harness that is opt-in and cannot mutate production Base data accidentally.
 - Update each endpoint's status only when its test criteria are met.
 
