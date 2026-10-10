@@ -35,13 +35,11 @@ function makeMethods(resource, names, calls, failingMethod) {
 function makeClient(failingMethod) {
   const calls = [];
   const bitable = Object.fromEntries(
-    Object.entries(sdkResources).map(([resource, names]) => [
-      resource,
-      Object.assign(
-        makeMethods(resource, names, calls, failingMethod),
-        { marker: resource },
-      ),
-    ]),
+    Object.entries(sdkResources).map(([resource, names]) => {
+      const group = makeMethods(resource, names, calls, failingMethod);
+      Object.defineProperty(group, "marker", { value: resource });
+      return [resource, group];
+    }),
   );
   return { client: { bitable }, calls };
 }
