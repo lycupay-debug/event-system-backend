@@ -4,8 +4,9 @@ This directory contains the first-stage, reusable TypeScript API method library 
 
 ## Goals
 
-- Wrap the Bitable Open APIs as named, reusable methods.
+- Wrap the Bitable Open APIs as named, reusable methods with request and response types inferred from the pinned official SDK.
 - Use the official Lark Node.js SDK as the transport and typed API source where the SDK exposes an endpoint.
+- Expose the Drive media operations required by Bitable attachment fields as a separate supporting method group; do not count those as Bitable endpoints.
 - Keep authentication, request execution, error normalization, pagination helpers, and resource methods separated.
 - Maintain a coverage ledger against the official API reference. An endpoint is not "complete" merely because a generic SDK client exists.
 - Make the method library usable by the later `larkAPI_N8N` node library without importing the running bridge application.
@@ -67,4 +68,4 @@ Expected quality gates:
 
 ## Current status
 
-Initial SDK-backed named wrappers and the shared client/error layer are in place. Offline tests now check all 49 wrapper methods for payload forwarding, as well as pagination and error normalization. Type-check, declaration build, and unit tests are run in a disposable Node container. This is not yet proof of complete public-API coverage: endpoint-by-endpoint reconciliation against the current official reference, endpoint contract tests, stronger request types, and opt-in live integration tests remain in progress. See [API_COVERAGE.md](./API_COVERAGE.md).
+SDK-backed wrappers preserve the official SDK's request and response types. All 49 Bitable wrappers are checked for payload forwarding; compile-time contracts cover representative path, query, body, and attachment-upload payloads. Six supporting Drive media methods cover Bitable attachment upload/download flows. Type-check, declaration build, type contracts, and unit tests run in a disposable Node container. Public-reference reconciliation remains in progress, and real API integration tests are intentionally deferred until the separate n8n node package is complete. See [API_COVERAGE.md](./API_COVERAGE.md).
