@@ -15,57 +15,57 @@ This ledger tracks the first-stage `larkAPI` wrapper surface against the officia
 
 The pinned SDK generated Bitable client exposes 49 unique operation/version combinations in its `bitable` client surface, and all 49 are exposed as named methods. Offline tests verify payload forwarding for all 49 and SDK error normalization. Compile-time contracts cover representative Base, table, record-list, record-create, query, and attachment-upload payloads. Six supporting Drive media methods are separately exposed for Bitable attachment upload/download; they are not counted as Bitable endpoints. All validation runs against a disposable clone. No live API calls are made in this phase.
 
-| # | API resource | Operation | HTTP | Path | Wrapper | Status |
+| # | API resource | Operation | HTTP | Path | Official API Explorer | Wrapper | Status |
 |---:|---|---|---|---|---|---|
-| 1 | app.table | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id` | `tables.update` | WRAPPER_TESTED |
-| 2 | app.table | batch_delete | POST | `/open-apis/bitable/v1/apps/:app_token/tables/batch_delete` | `tables.batchDelete` | WRAPPER_TESTED |
-| 3 | app.table | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/batch_create` | `tables.batchCreate` | WRAPPER_TESTED |
-| 4 | app.table | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables` | `tables.create` | WRAPPER_TESTED |
-| 5 | app.table | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id` | `tables.delete` | WRAPPER_TESTED |
-| 6 | app.table | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables` | `tables.list` | CONTRACT_TESTED |
-| 7 | app.dashboard | copy | POST | `/open-apis/bitable/v1/apps/:app_token/dashboards/:block_id/copy` | `dashboards.copy` | WRAPPER_TESTED |
-| 8 | app.dashboard | list | GET | `/open-apis/bitable/v1/apps/:app_token/dashboards` | `dashboards.list` | WRAPPER_TESTED |
-| 9 | app | update | PUT | `/open-apis/bitable/v1/apps/:app_token` | `apps.update` | WRAPPER_TESTED |
-| 10 | app | copy | POST | `/open-apis/bitable/v1/apps/:app_token/copy` | `apps.copy` | WRAPPER_TESTED |
-| 11 | app | create | POST | `/open-apis/bitable/v1/apps` | `apps.create` | WRAPPER_TESTED |
-| 12 | app | get | GET | `/open-apis/bitable/v1/apps/:app_token` | `apps.get` | CONTRACT_TESTED |
-| 13 | app.table.record | batch_delete | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_delete` | `records.batchDelete` | WRAPPER_TESTED |
-| 14 | app.table.record | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_create` | `records.batchCreate` | WRAPPER_TESTED |
-| 15 | app.table.record | batch_update | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_update` | `records.batchUpdate` | WRAPPER_TESTED |
-| 16 | app.table.record | update | PUT | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/:record_id` | `records.update` | WRAPPER_TESTED |
-| 17 | app.table.record | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records` | `records.create` | WRAPPER_TESTED |
-| 18 | app.table.record | search | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/search` | `records.search` | WRAPPER_TESTED |
-| 19 | app.table.record | batch_get | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_get` | `records.batchGet` | WRAPPER_TESTED |
-| 20 | app.table.record | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/:record_id` | `records.delete` | WRAPPER_TESTED |
-| 21 | app.table.record | get | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/:record_id` | `records.get` | WRAPPER_TESTED |
-| 22 | app.table.record | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records` | `records.list` | CONTRACT_TESTED |
-| 23 | app.role.member | batch_delete | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members/batch_delete` | `roles.batchDeleteMembers` | WRAPPER_TESTED |
-| 24 | app.role.member | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members/batch_create` | `roles.batchCreateMembers` | WRAPPER_TESTED |
-| 25 | app.role.member | create | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members` | `roles.createMember` | WRAPPER_TESTED |
-| 26 | app.role.member | list | GET | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members` | `roles.listMembers` | WRAPPER_TESTED |
-| 27 | app.role.member | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members/:member_id` | `roles.deleteMember` | WRAPPER_TESTED |
-| 28 | app.role | create | POST | `/open-apis/bitable/v1/apps/:app_token/roles` | `roles.create` | WRAPPER_TESTED |
-| 29 | app.role | update | PUT | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id` | `roles.update` | WRAPPER_TESTED |
-| 30 | app.role | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id` | `roles.delete` | WRAPPER_TESTED |
-| 31 | app.role | list | GET | `/open-apis/bitable/v1/apps/:app_token/roles` | `roles.list` | WRAPPER_TESTED |
-| 32 | app.table.view | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views` | `views.create` | WRAPPER_TESTED |
-| 33 | app.table.view | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views/:view_id` | `views.update` | WRAPPER_TESTED |
-| 34 | app.table.view | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views/:view_id` | `views.delete` | WRAPPER_TESTED |
-| 35 | app.table.view | get | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views/:view_id` | `views.get` | WRAPPER_TESTED |
-| 36 | app.table.view | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views` | `views.list` | WRAPPER_TESTED |
-| 37 | app.table.form | upgrade | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id/upgrade` | `forms.upgrade` | WRAPPER_TESTED |
-| 38 | app.table.form | get | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id` | `forms.get` | WRAPPER_TESTED |
-| 39 | app.table.form | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id` | `forms.update` | WRAPPER_TESTED |
-| 40 | app.table.field_group | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/field_groups` | `fieldGroups.create` | WRAPPER_TESTED |
-| 41 | app.table.form.field | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id/fields/:field_id` | `forms.updateField` | WRAPPER_TESTED |
-| 42 | app.table.form.field | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id/fields` | `forms.listFields` | WRAPPER_TESTED |
-| 43 | app.workflow | update | PUT | `/open-apis/bitable/v1/apps/:app_token/workflows/:workflow_id` | `workflows.update` | WRAPPER_TESTED |
-| 44 | app.workflow | list | GET | `/open-apis/bitable/v1/apps/:app_token/workflows` | `workflows.list` | WRAPPER_TESTED |
-| 45 | app.table.field | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields/:field_id` | `fields.delete` | WRAPPER_TESTED |
-| 46 | app.table.field | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields` | `fields.list` | WRAPPER_TESTED |
-| 47 | app.table.field | update | PUT | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields/:field_id` | `fields.update` | WRAPPER_TESTED |
-| 48 | app.table.field | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields` | `fields.create` | WRAPPER_TESTED |
-| 49 | app.block_workflow | list | GET | `/open-apis/bitable/v1/apps/:app_token/block_workflows` | `blockWorkflows.list` | WRAPPER_TESTED |
+| 1 | app.table | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=patch&project=bitable&resource=app.table&version=v1>) | `tables.update` | WRAPPER_TESTED |
+| 2 | app.table | batch_delete | POST | `/open-apis/bitable/v1/apps/:app_token/tables/batch_delete` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=batch_delete&project=bitable&resource=app.table&version=v1>) | `tables.batchDelete` | WRAPPER_TESTED |
+| 3 | app.table | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/batch_create` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=batch_create&project=bitable&resource=app.table&version=v1>) | `tables.batchCreate` | WRAPPER_TESTED |
+| 4 | app.table | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=create&project=bitable&resource=app.table&version=v1>) | `tables.create` | WRAPPER_TESTED |
+| 5 | app.table | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=delete&project=bitable&resource=app.table&version=v1>) | `tables.delete` | WRAPPER_TESTED |
+| 6 | app.table | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=list&project=bitable&resource=app.table&version=v1>) | `tables.list` | CONTRACT_TESTED |
+| 7 | app.dashboard | copy | POST | `/open-apis/bitable/v1/apps/:app_token/dashboards/:block_id/copy` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=copy&project=bitable&resource=app.dashboard&version=v1>) | `dashboards.copy` | WRAPPER_TESTED |
+| 8 | app.dashboard | list | GET | `/open-apis/bitable/v1/apps/:app_token/dashboards` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=list&project=bitable&resource=app.dashboard&version=v1>) | `dashboards.list` | WRAPPER_TESTED |
+| 9 | app | update | PUT | `/open-apis/bitable/v1/apps/:app_token` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=update&project=bitable&resource=app&version=v1>) | `apps.update` | WRAPPER_TESTED |
+| 10 | app | copy | POST | `/open-apis/bitable/v1/apps/:app_token/copy` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=copy&project=bitable&resource=app&version=v1>) | `apps.copy` | WRAPPER_TESTED |
+| 11 | app | create | POST | `/open-apis/bitable/v1/apps` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=create&project=bitable&resource=app&version=v1>) | `apps.create` | WRAPPER_TESTED |
+| 12 | app | get | GET | `/open-apis/bitable/v1/apps/:app_token` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=get&project=bitable&resource=app&version=v1>) | `apps.get` | CONTRACT_TESTED |
+| 13 | app.table.record | batch_delete | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_delete` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=batch_delete&project=bitable&resource=app.table.record&version=v1>) | `records.batchDelete` | WRAPPER_TESTED |
+| 14 | app.table.record | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_create` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=batch_create&project=bitable&resource=app.table.record&version=v1>) | `records.batchCreate` | WRAPPER_TESTED |
+| 15 | app.table.record | batch_update | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_update` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=batch_update&project=bitable&resource=app.table.record&version=v1>) | `records.batchUpdate` | WRAPPER_TESTED |
+| 16 | app.table.record | update | PUT | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/:record_id` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=update&project=bitable&resource=app.table.record&version=v1>) | `records.update` | WRAPPER_TESTED |
+| 17 | app.table.record | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=create&project=bitable&resource=app.table.record&version=v1>) | `records.create` | WRAPPER_TESTED |
+| 18 | app.table.record | search | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/search` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=search&project=bitable&resource=app.table.record&version=v1>) | `records.search` | WRAPPER_TESTED |
+| 19 | app.table.record | batch_get | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/batch_get` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=batch_get&project=bitable&resource=app.table.record&version=v1>) | `records.batchGet` | WRAPPER_TESTED |
+| 20 | app.table.record | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/:record_id` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=delete&project=bitable&resource=app.table.record&version=v1>) | `records.delete` | WRAPPER_TESTED |
+| 21 | app.table.record | get | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records/:record_id` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=get&project=bitable&resource=app.table.record&version=v1>) | `records.get` | WRAPPER_TESTED |
+| 22 | app.table.record | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/records` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=list&project=bitable&resource=app.table.record&version=v1>) | `records.list` | CONTRACT_TESTED |
+| 23 | app.role.member | batch_delete | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members/batch_delete` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=batch_delete&project=bitable&resource=app.role.member&version=v1>) | `roles.batchDeleteMembers` | WRAPPER_TESTED |
+| 24 | app.role.member | batch_create | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members/batch_create` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=batch_create&project=bitable&resource=app.role.member&version=v1>) | `roles.batchCreateMembers` | WRAPPER_TESTED |
+| 25 | app.role.member | create | POST | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=create&project=bitable&resource=app.role.member&version=v1>) | `roles.createMember` | WRAPPER_TESTED |
+| 26 | app.role.member | list | GET | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=list&project=bitable&resource=app.role.member&version=v1>) | `roles.listMembers` | WRAPPER_TESTED |
+| 27 | app.role.member | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id/members/:member_id` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=delete&project=bitable&resource=app.role.member&version=v1>) | `roles.deleteMember` | WRAPPER_TESTED |
+| 28 | app.role | create | POST | `/open-apis/bitable/v1/apps/:app_token/roles` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=create&project=bitable&resource=app.role&version=v1>) | `roles.create` | WRAPPER_TESTED |
+| 29 | app.role | update | PUT | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=update&project=bitable&resource=app.role&version=v1>) | `roles.update` | WRAPPER_TESTED |
+| 30 | app.role | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/roles/:role_id` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=delete&project=bitable&resource=app.role&version=v1>) | `roles.delete` | WRAPPER_TESTED |
+| 31 | app.role | list | GET | `/open-apis/bitable/v1/apps/:app_token/roles` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=list&project=bitable&resource=app.role&version=v1>) | `roles.list` | WRAPPER_TESTED |
+| 32 | app.table.view | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=create&project=bitable&resource=app.table.view&version=v1>) | `views.create` | WRAPPER_TESTED |
+| 33 | app.table.view | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views/:view_id` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=patch&project=bitable&resource=app.table.view&version=v1>) | `views.update` | WRAPPER_TESTED |
+| 34 | app.table.view | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views/:view_id` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=delete&project=bitable&resource=app.table.view&version=v1>) | `views.delete` | WRAPPER_TESTED |
+| 35 | app.table.view | get | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views/:view_id` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=get&project=bitable&resource=app.table.view&version=v1>) | `views.get` | WRAPPER_TESTED |
+| 36 | app.table.view | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/views` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=list&project=bitable&resource=app.table.view&version=v1>) | `views.list` | WRAPPER_TESTED |
+| 37 | app.table.form | upgrade | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id/upgrade` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=upgrade&project=bitable&resource=app.table.form&version=v1>) | `forms.upgrade` | WRAPPER_TESTED |
+| 38 | app.table.form | get | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=get&project=bitable&resource=app.table.form&version=v1>) | `forms.get` | WRAPPER_TESTED |
+| 39 | app.table.form | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=patch&project=bitable&resource=app.table.form&version=v1>) | `forms.update` | WRAPPER_TESTED |
+| 40 | app.table.field_group | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/field_groups` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=create&project=bitable&resource=app.table.field_group&version=v1>) | `fieldGroups.create` | WRAPPER_TESTED |
+| 41 | app.table.form.field | patch | PATCH | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id/fields/:field_id` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=patch&project=bitable&resource=app.table.form.field&version=v1>) | `forms.updateField` | WRAPPER_TESTED |
+| 42 | app.table.form.field | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/forms/:form_id/fields` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=list&project=bitable&resource=app.table.form.field&version=v1>) | `forms.listFields` | WRAPPER_TESTED |
+| 43 | app.workflow | update | PUT | `/open-apis/bitable/v1/apps/:app_token/workflows/:workflow_id` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=update&project=bitable&resource=app.workflow&version=v1>) | `workflows.update` | WRAPPER_TESTED |
+| 44 | app.workflow | list | GET | `/open-apis/bitable/v1/apps/:app_token/workflows` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=list&project=bitable&resource=app.workflow&version=v1>) | `workflows.list` | WRAPPER_TESTED |
+| 45 | app.table.field | delete | DELETE | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields/:field_id` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=delete&project=bitable&resource=app.table.field&version=v1>) | `fields.delete` | WRAPPER_TESTED |
+| 46 | app.table.field | list | GET | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=list&project=bitable&resource=app.table.field&version=v1>) | `fields.list` | WRAPPER_TESTED |
+| 47 | app.table.field | update | PUT | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields/:field_id` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=update&project=bitable&resource=app.table.field&version=v1>) | `fields.update` | WRAPPER_TESTED |
+| 48 | app.table.field | create | POST | `/open-apis/bitable/v1/apps/:app_token/tables/:table_id/fields` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=create&project=bitable&resource=app.table.field&version=v1>) | `fields.create` | WRAPPER_TESTED |
+| 49 | app.block_workflow | list | GET | `/open-apis/bitable/v1/apps/:app_token/block_workflows` | [Open](<https://open.feishu.cn/api-explorer?from=op_doc_tab&apiName=list&project=bitable&resource=app.block_workflow&version=v1>) | `blockWorkflows.list` | WRAPPER_TESTED |
 
 ## Public API reference reconciliation
 
