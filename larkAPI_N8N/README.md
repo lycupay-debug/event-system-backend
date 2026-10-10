@@ -47,4 +47,4 @@ npm run build
 npm test
 ```
 
-The package currently references `../larkAPI` as a local dependency for in-repository development. A publishable distribution workflow and installation into the live n8n instance are intentionally not part of this phase. Do not restart or modify the running n8n container while developing.
+The source package references `../larkAPI` as a development dependency. The build bundles that method-layer code into the node artifact while leaving the official Lark SDK as a declared runtime dependency, so the built node package does not need the sibling source directory at runtime. Publishing and installation into the live n8n instance are intentionally not part of this phase. Do not restart or modify the running n8n container while developing.
