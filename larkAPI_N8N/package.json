@@ -18,7 +18,7 @@
     "credentials"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && node scripts/copy-assets.cjs",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "test": "npm run typecheck && node --test test/*.test.cjs"
   },
