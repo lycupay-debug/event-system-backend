@@ -11,10 +11,10 @@ type Equal<A, B> =
     ? true
     : false;
 type Assert<T extends true> = T;
-type PayloadMatchesSdk<Wrapped, Sdk> = Assert<
+type PayloadMatchesSdk<Wrapped extends (...args: any[]) => any, Sdk extends (...args: any[]) => any> = Assert<
   Equal<
-    Parameters<Extract<Wrapped, (...args: any[]) => any>>[0],
-    NonNullable<Parameters<Extract<Sdk, (...args: any[]) => any>>[0]>
+    Parameters<Wrapped>[0],
+    NonNullable<Parameters<Sdk>[0]>
   >
 >;
 
