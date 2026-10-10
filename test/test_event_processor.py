@@ -99,7 +99,8 @@ class EventProcessorTests(unittest.TestCase):
         store.save("data/sample.json", {"version": 1, "value": "old"})
         store.save("data/sample.json", {"version": 2, "value": "new"})
         self.assertEqual(store.load("data/sample.json"), {"version": 2, "value": "new"})
-        self.assertEqual(list((self.root / "data").glob("*.tmp")), [])
+        self.assertEqual(list((self.root / "data").rglob("*.tmp")), [])
+        self.assertEqual(list((self.root / "data").rglob(".*.tmp")), [])
 
     def test_event_id_fallback_is_stable(self) -> None:
         event = {"file_token": "file", "table_id": "table"}
