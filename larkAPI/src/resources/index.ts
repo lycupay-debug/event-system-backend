@@ -108,4 +108,25 @@ export function createBitableMethods(client: lark.Client) {
   };
 }
 
+/**
+ * Supporting Drive media operations used by Bitable attachment fields.
+ * These are Drive APIs, not counted as Bitable endpoints in API_COVERAGE.md.
+ */
+export function createBitableAttachmentMethods(client: lark.Client) {
+  const media = client.drive.media;
+
+  return {
+    upload: safe("drive.media.uploadAll", media.uploadAll),
+    prepareUpload: safe("drive.media.uploadPrepare", media.uploadPrepare),
+    uploadPart: safe("drive.media.uploadPart", media.uploadPart),
+    finishUpload: safe("drive.media.uploadFinish", media.uploadFinish),
+    download: safe("drive.media.download", media.download),
+    batchGetTmpDownloadUrl: safe(
+      "drive.media.batchGetTmpDownloadUrl",
+      media.batchGetTmpDownloadUrl,
+    ),
+  };
+}
+
 export type BitableMethods = ReturnType<typeof createBitableMethods>;
+export type BitableAttachmentMethods = ReturnType<typeof createBitableAttachmentMethods>;
