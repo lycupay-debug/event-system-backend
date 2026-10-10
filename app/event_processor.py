@@ -98,7 +98,7 @@ class EventProcessor:
                     "received_at": document.get("received_at"),
                     "parsed_at": utc_now(),
                     "status": "parsed",
-                    "source_path": pending_path.relative_to(self.project_root).as_posix(),
+                    "source": "websocket",
                     "task_path": task_path.as_posix(),
                     "event": event,
                     "structured": structured,
