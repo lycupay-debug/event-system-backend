@@ -25,7 +25,7 @@ function makeMethods(resource, names, calls, failingMethod) {
     async (payload) => {
       calls.push({ resource, name, payload });
       if (failingMethod === `${resource}.${name}`) {
-        throw { code: 1254003, msg: "mock failure", request_id: "req-test-1" };
+        throw { response: { data: { code: 1254003, msg: "mock failure", request_id: "req-test-1" } } };
       }
       return { resource, name, payload };
     },
