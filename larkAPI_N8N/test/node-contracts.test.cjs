@@ -11,10 +11,12 @@ const packageJson = require(path.join(root, "package.json"));
 test("package declares the n8n node and credential entry points", () => {
   assert.equal(packageJson.n8n.nodes[0], "dist/nodes/LarkBitable/LarkBitable.node.js");
   assert.equal(packageJson.n8n.credentials[0], "dist/credentials/LarkBitableApi.credentials.js");
-  assert.equal(packageJson.dependencies["@lycupay-debug/lark-api"], "file:../larkAPI");
+  assert.equal(packageJson.devDependencies["@lycupay-debug/lark-api"], "file:../larkAPI");
+  assert.equal(packageJson.dependencies["@larksuiteoapi/node-sdk"], "1.72.0");
+  assert.ok(packageJson.scripts.build.includes("esbuild nodes/LarkBitable/LarkBitable.node.ts"));
 });
 
-test("node exposes all current Bitable resources and operations", () => {
+test("node exposes all current Bitable resources and 49 operations", () => {
   const source = fs.readFileSync(nodeFile, "utf8");
   const resources = [
     "apps", "tables", "records", "fields", "views", "forms",
@@ -25,6 +27,8 @@ test("node exposes all current Bitable resources and operations", () => {
     "batchCreateMembers", "batchDeleteMembers", "listFields", "updateField",
     "batchCreate", "batchGet", "batchUpdate", "batchDelete", "blockWorkflows",
   ];
+  const operationsBlock = source.split("const RESOURCE_OPERATIONS")[1].split("const RESOURCE_NAMES")[0];
+  assert.equal([...operationsBlock.matchAll(/value: "[A-Za-z]+"/g)].length, 49);
   for (const operation of expectedOperations) {
     assert.ok(source.includes(`value: "${operation}"`), `missing operation ${operation}`);
   }
