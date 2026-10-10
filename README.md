@@ -116,3 +116,13 @@ The test suite includes path validation, atomic JSON replacement, event persiste
 ```bash
 sudo docker compose run --rm --build --entrypoint python feishu-bridge -m unittest discover -s test -v
 ```
+
+
+## Lark Bitable API method library
+
+The first-stage reusable TypeScript API method library lives in `larkAPI/`. It uses the official `@larksuiteoapi/node-sdk` and is developed independently of the Python WebSocket event listener in `app/`.
+
+- Method library overview: [`larkAPI/README.md`](./larkAPI/README.md)
+- Endpoint-by-endpoint coverage ledger: [`larkAPI/API_COVERAGE.md`](./larkAPI/API_COVERAGE.md)
+- The current wrapper pass includes the 49 operation/version combinations found in the SDK-generated Bitable client. The official API reference comparison and endpoint-specific tests remain in progress.
+- The planned n8n node library will be a separate root-level `larkAPI_N8N/` directory in phase two.
