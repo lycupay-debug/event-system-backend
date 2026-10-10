@@ -1,0 +1,4 @@
+
+
+# Runtime event files are stored in a Docker volume.
+/data/
