@@ -4,19 +4,19 @@ import { normalizeLarkApiError } from "../errors";
 type AsyncMethod = (...args: any[]) => Promise<any>;
 type PayloadMethod<T extends AsyncMethod> = (
   payload?: Parameters<T>[0],
-) => ReturnType<T>;
+) => Promise<any>;
 
 function safe<T extends AsyncMethod>(
   operation: string,
   method: T,
 ): PayloadMethod<T> {
-  return (async (payload?: Parameters<T>[0]) => {
+  return async (payload?: Parameters<T>[0]) => {
     try {
       return await method(payload);
     } catch (error) {
       throw normalizeLarkApiError(error, operation);
     }
-  }) as PayloadMethod<T>;
+  };
 }
 
 /**
