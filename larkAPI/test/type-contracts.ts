@@ -1,7 +1,8 @@
 import type * as lark from "@larksuiteoapi/node-sdk";
-import { createBitableMethods } from "../src/resources";
+import { createBitableMethods, createBitableAttachmentMethods } from "../src/resources";
 
 const methods = createBitableMethods({} as lark.Client);
+const attachments = createBitableAttachmentMethods({} as lark.Client);
 
 methods.apps.get({ path: { app_token: "app_token" } });
 methods.tables.list({ path: { app_token: "app_token" } });
@@ -25,3 +26,24 @@ async function responseTypesArePreserved(): Promise<void> {
 }
 
 void responseTypesArePreserved;
+
+attachments.upload({
+  data: {
+    file_name: "attachment.txt",
+    parent_type: "bitable_file",
+    parent_node: "app_token",
+    size: 1,
+    file: Buffer.from("x"),
+  },
+});
+
+// @ts-expect-error Bitable media parent_type must be an official enum value.
+attachments.upload({
+  data: {
+    file_name: "attachment.txt",
+    parent_type: "bitable_attachment",
+    parent_node: "app_token",
+    size: 1,
+    file: Buffer.from("x"),
+  },
+});
