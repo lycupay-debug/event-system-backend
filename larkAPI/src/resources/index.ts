@@ -103,3 +103,5 @@ export function createBitableMethods(client: lark.Client) {
     },
   };
 }
+
+export type BitableMethods = ReturnType<typeof createBitableMethods>;
