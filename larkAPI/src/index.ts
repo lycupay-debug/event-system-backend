@@ -1,8 +1,8 @@
 /**
  * Public entry point for the Lark Bitable API method library.
- *
- * Resource wrappers will be exported here as they are implemented and tested.
- * Do not treat this initial entry point as full API coverage.
+ * Resource methods are SDK-backed; see API_COVERAGE.md for endpoint coverage
+ * and verification status.
  */
 export { createLarkClient, type LarkClientConfig } from "./client";
 export { LarkApiError, normalizeLarkApiError } from "./errors";
+export { createBitableMethods, type BitableMethods } from "./resources";
