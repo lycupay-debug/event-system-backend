@@ -37,10 +37,10 @@ attachments.upload({
   },
 });
 
-// @ts-expect-error Bitable media parent_type must be an official enum value.
 attachments.upload({
   data: {
     file_name: "attachment.txt",
+    // @ts-expect-error Bitable media parent_type must be an official enum value.
     parent_type: "bitable_attachment",
     parent_node: "app_token",
     size: 1,
