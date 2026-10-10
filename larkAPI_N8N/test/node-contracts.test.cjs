@@ -20,12 +20,13 @@ test("node exposes all current Bitable resources and 49 operations", () => {
   const source = fs.readFileSync(nodeFile, "utf8");
   const resources = [
     "apps", "tables", "records", "fields", "views", "forms",
-    "fieldGroups", "dashboards", "roles", "workflows", "blockWorkflows",
+    "fieldGroups", "dashboards", "roles", "workflows", "blockWorkflows", "attachments",
   ];
   for (const resource of resources) assert.match(source, new RegExp(`value: "${resource}"`));
   const expectedOperations = [
     "batchCreateMembers", "batchDeleteMembers", "listFields", "updateField",
     "batchCreate", "batchGet", "batchUpdate", "batchDelete", "blockWorkflows",
+    "upload", "prepareUpload", "uploadPart", "finishUpload", "download", "batchGetTmpDownloadUrl",
   ];
   const operationsBlock = source.split("const RESOURCE_OPERATIONS")[1].split("const RESOURCE_NAMES")[0];
   assert.equal([...operationsBlock.matchAll(/value: "[A-Za-z]+"/g)].length, 49);
@@ -41,6 +42,15 @@ test("node delegates requests to larkAPI and does not embed secrets in parameter
   assert.match(source, /parsePayload\(this\.getNodeParameter\("payload", i\)\)/);
   assert.match(source, /continueOnFail\(\)/);
   assert.doesNotMatch(source, /appSecret.*type:\s*"string".*default:\s*["'][^"']+["']/s);
+});
+
+test("attachment operations support n8n binary upload and download", () => {
+  const source = fs.readFileSync(nodeFile, "utf8");
+  assert.match(source, /createBitableAttachmentMethods/);
+  assert.match(source, /getBinaryDataBuffer\(i, binaryPropertyName\)/);
+  assert.match(source, /prepareBinaryData\(/);
+  assert.match(source, /outputBinaryPropertyName/);
+  assert.match(source, /responseToBuffer/);
 });
 
 test("credential stores App Secret as a password field", () => {
