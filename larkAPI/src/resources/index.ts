@@ -12,13 +12,17 @@ function safe<T extends SdkMethod>(
   operation: string,
   method: T,
 ): (payload: PayloadOf<T>) => Promise<Awaited<ReturnType<T>>> {
-  return async (payload) => {
+  const wrapped = async (payload: PayloadOf<T>) => {
     try {
-      return (await method(payload)) as Awaited<ReturnType<T>>;
+      return await method(payload);
     } catch (error) {
       throw normalizeLarkApiError(error, operation);
     }
   };
+
+  return wrapped as (
+    payload: PayloadOf<T>
+  ) => Promise<Awaited<ReturnType<T>>>;
 }
 
 /**
