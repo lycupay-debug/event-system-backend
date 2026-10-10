@@ -125,4 +125,4 @@ The first-stage reusable TypeScript API method library lives in `larkAPI/`. It u
 - Method library overview: [`larkAPI/README.md`](./larkAPI/README.md)
 - Endpoint-by-endpoint coverage ledger: [`larkAPI/API_COVERAGE.md`](./larkAPI/API_COVERAGE.md)
 - The current wrapper pass includes the 49 operation/version combinations found in the SDK-generated Bitable client. The official API reference comparison and endpoint-specific tests remain in progress.
-- The planned n8n node library will be a separate root-level `larkAPI_N8N/` directory in phase two.
+- The n8n node package is now being developed in the separate root-level `larkAPI_N8N/` directory. It delegates Bitable requests to `larkAPI/`; see [`larkAPI_N8N/README.md`](./larkAPI_N8N/README.md).
