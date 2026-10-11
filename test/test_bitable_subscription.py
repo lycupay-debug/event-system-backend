@@ -12,7 +12,8 @@ import sys
 
 import lark_oapi as lark
 
-FILE_TOKEN = "XiPEbrTdxaYdWqsS1h5cUQC3nBb"
+FILE_TOKEN = "K65ybasHRamYbRsRDvwc75Zpnsc"
+EXPECTED_TABLE_ID = "tbla4l340VHll3rb"
 FILE_TYPE = "bitable"
 EVENT_TYPES = ["drive.file.bitable_record_changed_v1"]
 
@@ -34,6 +35,7 @@ def main() -> int:
 
     # Official endpoint: POST /open-apis/drive/v1/files/{file_token}/subscribe
     # Required query parameter: file_type=bitable
+    # This subscribes the Bitable document, not an individual table_id.
     request = (
         lark.BaseRequest.builder()
         .http_method(lark.HttpMethod.POST)
@@ -68,6 +70,7 @@ def main() -> int:
         "api_message": msg,
         "log_id": log_id,
         "file_token": FILE_TOKEN,
+        "expected_table_id_in_event": EXPECTED_TABLE_ID,
         "file_type": FILE_TYPE,
         "event_types_configured_in_open_platform": EVENT_TYPES,
         "response": body,
@@ -75,6 +78,7 @@ def main() -> int:
 
     if response.success() and code == 0:
         print("成功：飞书已接受该多维表格的文件级事件订阅请求。")
+        print(f"验证时请确认收到的事件 event.file_token={FILE_TOKEN} 且 event.table_id={EXPECTED_TABLE_ID}。")
         return 0
 
     if code in (1069603, 1069604):
