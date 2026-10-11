@@ -6,7 +6,6 @@ import logging
 import os
 import re
 import threading
-import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -150,7 +149,7 @@ class EventProcessor:
             if not 200 <= status < 300:
                 raise RuntimeError(f"unexpected HTTP status {status}")
             receipt = json.loads(response_body.decode("utf-8"))
-            if receipt.get("accepted") is not True or receipt.get("event_id") != event_id:
+            if not isinstance(receipt, dict) or receipt.get("accepted") is not True or receipt.get("event_id") != event_id:
                 raise RuntimeError("webhook acknowledgement did not match event_id")
         except (HTTPError, URLError, TimeoutError, OSError, ValueError, RuntimeError) as exc:
             attempts = int(outbox.get("attempts", 0)) + 1
