@@ -42,6 +42,7 @@ class N8NForwardingTests(unittest.TestCase):
         response.read.return_value = json.dumps(
             {"ok": True, "accepted": True, "event_id": event_id}
         ).encode("utf-8")
+        response.__enter__.return_value = response
         return response
 
     def test_successful_forward_sends_expected_body_and_removes_outbox(self) -> None:
