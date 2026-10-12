@@ -42,14 +42,36 @@ def inspect_connection() -> dict[str, Any]:
         }
 
 
+def probe_write() -> dict[str, Any]:
+    """Verify temporary CREATE, INSERT, and SELECT without persistent schema changes."""
+    with connect() as conn, conn.cursor() as cur:
+        cur.execute(
+            """
+            CREATE TEMPORARY TABLE driver_write_probe (
+                id integer PRIMARY KEY,
+                marker text NOT NULL
+            ) ON COMMIT DROP
+            """
+        )
+        cur.execute(
+            "INSERT INTO driver_write_probe (id, marker) VALUES (%s, %s)",
+            (1, "psycopg-write-probe"),
+        )
+        cur.execute("SELECT marker FROM driver_write_probe WHERE id = %s", (1,))
+        row = cur.fetchone()
+        if row is None or row[0] != "psycopg-write-probe":
+            raise RuntimeError("PostgreSQL driver write/read probe returned an unexpected value")
+        return {"write_read": "passed", "persistent_objects_created": False}
+
+
 def main() -> None:
     import argparse
 
     parser = argparse.ArgumentParser(description="PostgreSQL driver verification")
-    parser.add_argument("action", choices=("check",))
+    parser.add_argument("action", choices=("check", "probe-write"))
     args = parser.parse_args()
-    if args.action == "check":
-        print(inspect_connection())
+    result = inspect_connection() if args.action == "check" else probe_write()
+    print(result)
 
 
 if __name__ == "__main__":
