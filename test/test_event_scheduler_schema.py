@@ -7,6 +7,8 @@ from __future__ import annotations
 import unittest
 from uuid import uuid4
 
+from psycopg.types.json import Jsonb
+
 from app import database
 
 
@@ -75,7 +77,7 @@ class EventSchedulerSchemaTests(unittest.TestCase):
                     VALUES (%s, %s, %s, %s)
                     RETURNING event_id, status
                     """,
-                    (event_id, "test", "schema.test", {"test": True}),
+                    (event_id, "test", "schema.test", Jsonb({"test": True})),
                 ).fetchone()
                 self.assertEqual(event["event_id"], event_id)
                 self.assertEqual(event["status"], "received")
@@ -86,7 +88,7 @@ class EventSchedulerSchemaTests(unittest.TestCase):
                     VALUES (%s, %s, %s, %s)
                     RETURNING task_id, status
                     """,
-                    (event_id, "schema.test", resource_key, {"step": 1}),
+                    (event_id, "schema.test", resource_key, Jsonb({"step": 1})),
                 ).fetchone()
                 self.assertEqual(task["status"], "queued")
 
