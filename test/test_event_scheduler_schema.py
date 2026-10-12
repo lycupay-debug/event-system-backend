@@ -1,6 +1,6 @@
 """Integration tests for the first PostgreSQL event/scheduler schema segment.
 
-The write test uses a transaction configured to roll back, leaving no durable rows.
+The write test switches to app_runtime and rolls the transaction back, leaving no durable rows.
 """
 from __future__ import annotations
 
@@ -68,6 +68,7 @@ class EventSchedulerSchemaTests(unittest.TestCase):
 
         with database.connect() as conn:
             with conn.transaction(force_rollback=True):
+                conn.execute("SET LOCAL ROLE app_runtime")
                 event = conn.execute(
                     """
                     INSERT INTO bridge.events (event_id, source_app, event_type, payload)
