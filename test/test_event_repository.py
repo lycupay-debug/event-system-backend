@@ -5,6 +5,7 @@ import unittest
 from uuid import uuid4
 
 from app import event_repository
+from app.database import connect
 
 
 class EventRepositoryTests(unittest.TestCase):
@@ -12,7 +13,7 @@ class EventRepositoryTests(unittest.TestCase):
         event_id = "repository_test_" + uuid4().hex
         payload = {"header": {"event_id": event_id}, "event": {"test": True}}
 
-        with event_repository.using_connection() as conn:
+        with connect() as conn:
             with conn.transaction(force_rollback=True):
                 conn.execute("SET LOCAL ROLE app_runtime")
                 self.assertTrue(
