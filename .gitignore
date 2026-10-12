@@ -1,4 +1,10 @@
-
+# Local environment files and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+/secrets/
 
 # Runtime event files are stored in a Docker volume.
 /data/
